@@ -7,8 +7,9 @@ use Brood\Config\Config,
 
 class HelloWorld implements Action
 {
-    public function execute(\GearmanJob $job, Config $config, $actionIndex)
+    public function execute(\GearmanJob $job, Config $config, $actionIndex, Logger $logger)
     {
-        $job->sendData(Logger::serialize('Hello world!', Logger::INFO));
+        $logger->log('Hello world!', Logger::INFO);
+        $job->sendData($logger->serializeEntry());
     }
 }

@@ -13,13 +13,31 @@ class Logger
     const INFO    = 6;  // Informational: informational messages
     const DEBUG   = 7;  // Debug: debug messages
 
-    public static function serialize($message, $priority)
+    protected $lastEntry;
+
+    public function log($message, $priority)
     {
+        printf("%s: %s\n", $this->translatePriority($priority), $message);
+        $this->lastEntry = array($message, $priority);
+    }
+
+    public function serializeEntry($message = null, $priority = null)
+    {
+        if ($message === null && $priority === null) {
+            list($message, $priority) = $this->lastEntry;
+        }
+
         return $priority . ' ' . $message;
     }
 
-    public static function deserialize($serialized)
+    public function deserializeEntry($serialized)
     {
         return array_reverse(explode(' ', $serialized, 2));
+    }
+
+    protected function translatePriority($priority)
+    {
+        $priorities = array('EMERG', 'ALERT', 'CRIT', 'ERR', 'WARN', 'NOTICE', 'INFO', 'DEBUG');
+        return $priorities[$priority];
     }
 }

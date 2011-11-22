@@ -2,9 +2,8 @@
 
 namespace Brood\Action;
 
-use Brood\Config\Config,
-    Brood\Gearman,
-    Brood\Log\Logger;
+use Brood\Gearman,
+    Brood\Log\Logger as Logger;
 
 class Dispatcher
 {
@@ -17,16 +16,20 @@ class Dispatcher
      * what class we need to instantiate, then call the class' execute() method.
      *
      * @param GearmanJob $job
-     * @param Brood\Config\Config $config
+     * @param Brood\Overlord|Brood\Drone $context
      * @return mixed
      */
-    public static function dispatch(\GearmanJob $job, Config $config)
+    public static function dispatch(\GearmanJob $job, $context)
     {
         list($configHash, $actionIndex) = explode(' ', Gearman\Util::decodeWorkload($job->workload()));
 
+        $config = $context->getConfig();
+        $logger = $context->getLogger();
+
         // this limitation will be removed in future versions
         if ($config->getConfigHash() != $configHash) {
-            $job->sendData(Logger::serialize('Configuration on overload does not match configuration on drone', Logger::ERR));
+            $logger->log('Configuration on overload does not match configuration on drone', Logger::ERR);
+            $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
         }
@@ -34,7 +37,8 @@ class Dispatcher
         $actions = $config->getActions();
 
         if (!isset($actions[$actionIndex])) {
-            $job->sendData(Logger::serialize(sprintf('No action with index %d', $actionIndex), Logger::ERR));
+            $logger->log(sprintf('No action with index %d', $actionIndex), Logger::ERR);
+            $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
         }
@@ -48,21 +52,24 @@ class Dispatcher
         try {
             $action = new $class();
         } catch (\Exception $e) {
-            $job->sendData(Logger::serialize(sprintf('Unable to load action class "%s"', $class), Logger::ERR));
+            $logger->log(sprintf('Unable to load action class "%s"', $class), Logger::ERR);
+            $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
         }
 
         if (!($action instanceof Action)) {
-            $job->sendData(Logger::serialize(sprintf('Action class "%s" does not implement Brood\Action\Action interface', $class), Logger::ERR));
+            $logger->log(sprintf('Action class "%s" does not implement Brood\Action\Action interface', $class), Logger::ERR);
+            $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
         }
 
         try {
-            return $action->execute($job, $config, $actionIndex);
+            return $action->execute($job, $config, $actionIndex, $logger);
         } catch (\Exception $e) {
-            $job->sendData(Logger::serialize(sprintf('%s::execute() threw an exception: %s: %s', get_class($e), $e->getMessage()), Logger::ERR));
+            $logger->log(sprintf('%s::execute() threw an exception: %s: %s', get_class($e), $e->getMessage()), Logger::ERR);
+            $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
         }
