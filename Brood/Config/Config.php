@@ -31,8 +31,6 @@ class Config
 
     public function getHostGroups()
     {
-        require_once __DIR__ . '/HostGroup.php';
-
         $hostgroups = array();
         foreach ($this->xml->hostgroup as $hostgroup) {
             $hostgroup = new HostGroup($hostgroup);
@@ -43,8 +41,6 @@ class Config
 
     public function getActions()
     {
-        require_once __DIR__ . '/Action.php';
-
         $actions = array();
         foreach ($this->xml->action as $action) {
             $actions[] = new Action($action);
