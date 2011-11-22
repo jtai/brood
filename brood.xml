@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<brood>
+    <!-- Gearman parameters used on both Overlord and Drones -->
+    <gearman timeout="3600000">
+        <server>gearmand.example.com</server>
+    </gearman>
+
+    <!-- Groups of hosts, typically each group is behind a different load balancer -->
+    <!-- Each host runs a Gearman worker called a Drone -->
+    <hostgroup name="web">
+        <host>www1.example.com</host>
+        <host>www2.example.com</host>
+        <host>www3.example.com</host>
+        <host>www4.example.com</host>
+    </hostgroup>
+    <hostgroup name="gearman">
+        <host>gearman1.example.com</host>
+        <host>gearman2.example.com</host>
+    </hostgroup>
+
+    <!-- Actions to run, each will be run in order, serially -->
+    <!-- The Overlord coordinates the execution of these actions -->
+    <action class="Announce\Email">
+        <!-- Run this action on the Overlord itself (no Gearman involvement) -->
+        <overlord />
+        <!-- Action classes can take custom parameters -->
+        <parameters>
+            <email>team@example.com</email>
+        </parameters>
+    </action>
+    <action class="Distribute\Git\Pull">
+        <!-- Actions are run on hostgroups/hosts concurrently -->
+        <hostgroup>web</hostgroup>
+        <hostgroup>gearman</hostgroup>
+    </action>
+    <action class="Restart\Apache">
+        <!-- Within a hostgroup, concurrency can be specified -->
+        <hostgroup concurrency="1">web</hostgroup>
+    </action>
+    <action class="Restart\Gearman">
+        <hostgroup>gearman</hostgroup>
+    </action>
+</brood>
