@@ -15,24 +15,24 @@ class Logger
 
     protected $lastEntry;
 
-    public function log($message, $priority)
+    public function log($priority, $tag, $message)
     {
-        printf("%s: %s\n", $this->translatePriority($priority), $message);
-        $this->lastEntry = array($message, $priority);
+        printf("[%s] %s: %s\n", $this->translatePriority($priority), $tag, $message);
+        $this->lastEntry = array($priority, $tag, $message);
     }
 
-    public function serializeEntry($message = null, $priority = null)
+    public function serializeEntry($priority = null, $tag = null, $message = null)
     {
-        if ($message === null && $priority === null) {
-            list($message, $priority) = $this->lastEntry;
+        if ($priority === null && $tag === null && $message === null) {
+            list($priority, $tag, $message) = $this->lastEntry;
         }
 
-        return $priority . ' ' . $message;
+        return join(' ', array($priority, $tag, $message));
     }
 
     public function deserializeEntry($serialized)
     {
-        return array_reverse(explode(' ', $serialized, 2));
+        return explode(' ', $serialized, 3);
     }
 
     protected function translatePriority($priority)

@@ -36,7 +36,9 @@ class Drone
 
     public function run()
     {
-        $this->logger->log(sprintf('Drone starting up on %s', $this->hostname), Logger::INFO);
+        $this->logger->log(Logger::INFO, __CLASS__, sprintf(
+            'Drone starting up on %s', $this->hostname
+        ));
 
         $worker = Gearman\Factory::workerFactory($this->config);
 
@@ -44,7 +46,10 @@ class Drone
         $callback = array('\Brood\Action\Dispatcher', 'dispatch');
         $worker->addFunction($functionName, $callback, $this);
 
-        $this->logger->log(sprintf('Connecting to %s and waiting for a %s job', join(',', array_keys($this->config->getGearmanServers())), $functionName), Logger::INFO);
+        $this->logger->log(Logger::INFO, __CLASS__, sprintf(
+            'Connecting to %s and waiting for a %s job',
+            join(',', array_keys($this->config->getGearmanServers())), $functionName
+        ));
 
         // don't loop -- exit after every job and let supervisord restart us
         $worker->work();
@@ -52,15 +57,15 @@ class Drone
         switch ($worker->returnCode()) {
             case \GEARMAN_SUCCESS:
                 // will get here even if job returns failure
-                $this->logger->log('Drone shutting down, job finished', Logger::INFO);
+                $this->logger->log(Logger::INFO, __CLASS__, 'Drone shutting down, job finished');
                 break;
 
             case \GEARMAN_TIMEOUT:
-                $this->logger->log('Drone shutting down, timed out waiting for job', Logger::INFO);
+                $this->logger->log(Logger::INFO, __CLASS__, 'Drone shutting down, timed out waiting for job');
                 break;
 
             default:
-                $this->logger->log($worker->error(), Logger::ERR);
+                $this->logger->log(Logger::ERR, __CLASS__, $worker->error());
                 break;
         }
     }

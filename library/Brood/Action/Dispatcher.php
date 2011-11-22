@@ -28,7 +28,7 @@ class Dispatcher
 
         // this limitation will be removed in future versions
         if ($config->getConfigHash() != $configHash) {
-            $logger->log('Configuration on overload does not match configuration on drone', Logger::ERR);
+            $logger->log(Logger::ERR, __CLASS__, 'Configuration on overload does not match configuration on drone');
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
@@ -37,7 +37,7 @@ class Dispatcher
         $actions = $config->getActions();
 
         if (!isset($actions[$actionIndex])) {
-            $logger->log(sprintf('No action with index %d', $actionIndex), Logger::ERR);
+            $logger->log(Logger::ERR, __CLASS__, sprintf('No action with index %d', $actionIndex));
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
@@ -52,14 +52,14 @@ class Dispatcher
         try {
             $action = new $class();
         } catch (\Exception $e) {
-            $logger->log(sprintf('Unable to load action class "%s"', $class), Logger::ERR);
+            $logger->log(Logger::ERR, __CLASS__, sprintf('Unable to load action class "%s"', $class));
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
         }
 
         if (!($action instanceof Action)) {
-            $logger->log(sprintf('Action class "%s" does not implement Brood\Action\Action interface', $class), Logger::ERR);
+            $logger->log(Logger::ERR, __CLASS__, sprintf('Action class "%s" does not implement Brood\Action\Action interface', $class));
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
@@ -68,7 +68,7 @@ class Dispatcher
         try {
             return $action->execute($job, $config, $actionIndex, $logger);
         } catch (\Exception $e) {
-            $logger->log(sprintf('%s::execute() threw an exception: %s: %s', get_class($e), $e->getMessage()), Logger::ERR);
+            $logger->log(Logger::ERR, __CLASS__, sprintf('%s::execute() threw an exception: %s: %s', get_class($e), $e->getMessage()));
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;

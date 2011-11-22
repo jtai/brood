@@ -9,7 +9,7 @@ class HelloWorld implements Action
 {
     public function execute(\GearmanJob $job, Config $config, $actionIndex, Logger $logger)
     {
-        $logger->log('Hello world!', Logger::INFO);
+        $logger->log(Logger::INFO, __CLASS__, 'Hello world!');
         $job->sendData($logger->serializeEntry());
     }
 }
