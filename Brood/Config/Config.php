@@ -11,6 +11,11 @@ class Config
         $this->xml = new \SimpleXmlElement($filename, 0, true);
     }
 
+    public function getConfigHash()
+    {
+        return sha1($this->xml->asXml());
+    }
+
     public function getGearmanTimeout()
     {
         if (isset($this->xml->gearman[0]['timeout'])) {
