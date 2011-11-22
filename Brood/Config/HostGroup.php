@@ -18,6 +18,11 @@ class HostGroup
         }
     }
 
+    public function getAttributes()
+    {
+        return $this->xml->attributes();
+    }
+
     public function getHosts()
     {
         $hosts = array();

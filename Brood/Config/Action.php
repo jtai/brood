@@ -18,6 +18,11 @@ class Action
         }
     }
 
+    public function getAttributes()
+    {
+        return $this->xml->attributes();
+    }
+
     public function getOverlord()
     {
         return (bool) $this->xml->overlord;
