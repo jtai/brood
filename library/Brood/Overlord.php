@@ -63,7 +63,6 @@ class Overlord
             }
 
             foreach (array_keys($action->getHosts()) as $host) {
-                // create a unique function name using drone's hostname and hash of config file
                 $functionName = Gearman\Util::getFunctionName($host);
                 $this->logger->log(Logger::INFO, __CLASS__, sprintf(
                     'Dispatching %s to %s',
@@ -75,6 +74,8 @@ class Overlord
             // blocks until tasks finish
             $client->runTasks();
         }
+
+        $this->logger->log(Logger::INFO, __CLASS__, 'Overlord shutting down');
     }
 
     public function onData(\GearmanTask $task)
