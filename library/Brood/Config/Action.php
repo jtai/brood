@@ -30,11 +30,11 @@ class Action
 
     public function getHostGroups()
     {
-        $hostgroups = array();
-        foreach ($this->xml->hostgroup as $hostgroup) {
-            $hostgroups[(string) $hostgroup] = $hostgroup->attributes();
+        $hostGroups = array();
+        foreach ($this->xml->hostgroup as $hostGroup) {
+            $hostGroups[(string) $hostGroup] = $hostGroup->attributes();
         }
-        return $hostgroups;
+        return $hostGroups;
     }
 
     public function getHosts()

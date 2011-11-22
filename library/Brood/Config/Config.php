@@ -36,12 +36,12 @@ class Config
 
     public function getHostGroups()
     {
-        $hostgroups = array();
-        foreach ($this->xml->hostgroup as $hostgroup) {
-            $hostgroup = new HostGroup($hostgroup);
-            $hostgroups[$hostgroup->getName()] = $hostgroup;
+        $hostGroups = array();
+        foreach ($this->xml->hostgroup as $hostGroup) {
+            $hostGroup = new HostGroup($hostGroup);
+            $hostGroups[$hostGroup->getName()] = $hostGroup;
         }
-        return $hostgroups;
+        return $hostGroups;
     }
 
     public function getActions()
