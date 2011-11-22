@@ -71,10 +71,10 @@ class Overlord
                 ));
                 $client->addTask($functionName, $workload);
             }
-        }
 
-        // blocks until tasks finish
-        $client->runTasks();
+            // blocks until tasks finish
+            $client->runTasks();
+        }
     }
 
     public function onData(\GearmanTask $task)
