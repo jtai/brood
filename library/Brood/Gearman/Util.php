@@ -30,11 +30,11 @@ class Util
         list($magic, $version, $workload) = explode(' ', $encodedWorkload, 3);
 
         if ($magic != self::BROOD_PROTOCOL_MAGIC) {
-            throw new \Exception('Job workload does not start with brood magic marker; only cerebrates and overlords may control zerg minions');
+            throw new \RuntimeException('Job workload does not start with brood magic marker; only cerebrates and overlords may control zerg minions');
         }
 
         if ($version != self::BROOD_PROTOCOL_VERSION) {
-            throw new \Exception(sprintf('Job workload brood protocol version was %d, expected %d', $version, self::BROOD_PROTOCOL_VERSION));
+            throw new \RuntimeException(sprintf('Job workload brood protocol version was %d, expected %d', $version, self::BROOD_PROTOCOL_VERSION));
         }
 
         return $workload;
