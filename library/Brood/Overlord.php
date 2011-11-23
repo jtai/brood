@@ -30,7 +30,7 @@ class Overlord
 
     public function run()
     {
-        $this->logger->log(Logger::INFO, __CLASS__, 'Overlord starting up');
+        $this->logger->log(Logger::NOTICE, __CLASS__, 'Overlord starting up');
 
         $client = Gearman\Factory::clientFactory($this->config);
 
@@ -95,7 +95,7 @@ class Overlord
                 // loop over every host in this run and dispatch
                 foreach ($hostsThisRun as $host) {
                     $functionName = Gearman\Util::getFunctionName($host);
-                    $this->logger->log(Logger::INFO, __CLASS__, sprintf(
+                    $this->logger->log(Logger::NOTICE, __CLASS__, sprintf(
                         'Dispatching %s to %s',
                         $action->getClass(), $functionName
                     ));
@@ -107,7 +107,7 @@ class Overlord
             }
         }
 
-        $this->logger->log(Logger::INFO, __CLASS__, 'Overlord shutting down');
+        $this->logger->log(Logger::NOTICE, __CLASS__, 'Overlord shutting down');
     }
 
     public function onData(\GearmanTask $task)
