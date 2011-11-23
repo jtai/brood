@@ -48,11 +48,52 @@ class Overlord
                 // FIXME: dispatch locally
             }
 
-            // FIXME: do crazy scheduling here
+            // build a queue of hosts for each hostgroup
+            $queues = array();
+
+            // remember max concurrency for each hostgroup
+            $concurrency = array();
 
             foreach ($action->getHostGroups() as $hostGroupName => $hostGroupInfo) {
                 $hostGroup = $hostGroups[$hostGroupName];
                 foreach (array_keys($hostGroup->getHosts()) as $host) {
+                    $queues[$hostGroupName][] = $host;
+                }
+                $concurrency[$hostGroupName] = (int) $hostGroupInfo['concurrency'];
+            }
+
+            foreach (array_keys($action->getHosts()) as $host) {
+                $queues[''][] = $host;
+            }
+            $concurrency[''] = 0;
+
+            while (!empty($queues)) {
+                $hostsThisRun = array();
+
+                // loop over every queue and dequeue a few hosts for this run
+                foreach ($queues as $hostGroupName => $hosts) {
+                    $added = 0;
+
+                    foreach ($hosts as $i => $host) {
+                        // dequeue a host
+                        $hostsThisRun[] = $host;
+                        unset($queues[$hostGroupName][$i]);
+
+                        // make sure we don't go over our concurrency limit
+                        $added++;
+                        if ($added == $concurrency[$hostGroupName]) {
+                            break;
+                        }
+                    }
+
+                    // if this queue is now empty, remove it entirely
+                    if (empty($hosts)) {
+                        unset($queues[$hostGroupName]);
+                    }
+                }
+
+                // loop over every host in this run and dispatch
+                foreach ($hostsThisRun as $host) {
                     $functionName = Gearman\Util::getFunctionName($host);
                     $this->logger->log(Logger::INFO, __CLASS__, sprintf(
                         'Dispatching %s to %s (member of hostgroup %s)',
@@ -60,19 +101,10 @@ class Overlord
                     ));
                     $client->addTask($functionName, $workload);
                 }
-            }
 
-            foreach (array_keys($action->getHosts()) as $host) {
-                $functionName = Gearman\Util::getFunctionName($host);
-                $this->logger->log(Logger::INFO, __CLASS__, sprintf(
-                    'Dispatching %s to %s',
-                    $action->getClass(), $functionName
-                ));
-                $client->addTask($functionName, $workload);
+                // blocks until tasks finish
+                $client->runTasks();
             }
-
-            // blocks until tasks finish
-            $client->runTasks();
         }
 
         $this->logger->log(Logger::INFO, __CLASS__, 'Overlord shutting down');
