@@ -12,10 +12,10 @@ class Overlord
     protected $config;
     protected $logger;
 
-    public function __construct(Config $config)
+    public function __construct(Config $config, $logLevel = Logger::DEBUG)
     {
         $this->config = $config;
-        $this->logger = new Logger();
+        $this->logger = new Logger($logLevel);
     }
 
     public function getConfig()

@@ -12,11 +12,11 @@ class Drone
     protected $logger;
     protected $hostname;
 
-    public function __construct(Config $config, $hostname)
+    public function __construct(Config $config, $logLevel = Logger::DEBUG, $hostname = null)
     {
         $this->config = $config;
-        $this->logger = new Logger();
-        $this->hostname = $hostname;
+        $this->logger = new Logger($logLevel);
+        $this->hostname = $hostname === null ? gethostname() : $hostname;
     }
 
     public function getConfig()

@@ -11,11 +11,26 @@ class Logger
     const DEBUG   = 7;  // Debug: debug messages
 
     protected $lastEntry;
+    protected $logLevel;
+
+    public function __construct($logLevel = self::DEBUG)
+    {
+        $this->setLogLevel($logLevel);
+    }
+
+    public function setLogLevel($logLevel)
+    {
+        $this->logLevel = $logLevel;
+        return $this;
+    }
 
     public function log($priority, $tag, $message)
     {
-        printf("%s %s %s: %s\n", date('M d H:i:s'), $this->translatePriority($priority), $tag, $message);
         $this->lastEntry = array($priority, $tag, $message);
+
+        if ($priority <= $this->logLevel) {
+            printf("%s %s %s: %s\n", date('M d H:i:s'), $this->translatePriority($priority), $tag, $message);
+        }
     }
 
     public function serializeEntry($priority = null, $tag = null, $message = null)
