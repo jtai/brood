@@ -113,16 +113,16 @@ class Overlord
     public function onData(\GearmanTask $task)
     {
         list($priority, $tag, $message) = $this->logger->deserializeEntry($task->data());
-        $this->logger->log($priority, sprintf('(%s) %s', $task->jobHandle(), $tag), $message);
+        $this->logger->log($priority, sprintf('%s[%s]', $tag, $task->jobHandle()), $message);
     }
 
     public function onComplete(\GearmanTask $task)
     {
-        $this->logger->log(Logger::INFO, sprintf('(%s) %s', $task->jobHandle(), __CLASS__), 'Job returned success');
+        $this->logger->log(Logger::INFO, sprintf('%s[%s]', __CLASS__, $task->jobHandle()), 'Job returned success');
     }
 
     public function onFail(\GearmanTask $task)
     {
-        $this->logger->log(Logger::ERR, sprintf('(%s) %s', $task->jobHandle(), __CLASS__), 'Job returned failure');
+        $this->logger->log(Logger::ERR, sprintf('%s[%s]', __CLASS__, $task->jobHandle()), 'Job returned failure');
     }
 }
