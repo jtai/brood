@@ -45,7 +45,20 @@ class Overlord
             $workload = Gearman\Util::encodeWorkload($configHash . ' ' . $actionIndex);
 
             if ($action->getOverlord()) {
-                // FIXME: dispatch locally
+                $functionName = Gearman\Util::getFunctionName('overlord');
+                $this->logger->log(Logger::NOTICE, __CLASS__, sprintf(
+                    'Dispatching %s locally',
+                    $action->getClass()
+                ));
+
+                // create dummy gearman job that we can call action class with
+                $job = new Gearman\LocalGearmanJob();
+                $job->setFunctionName($functionName);
+                $job->setWorkload($workload);
+                $job->setDataCallback(array($this, 'onData'));
+                $job->setCompleteCallback(array($this, 'onComplete'));
+                $job->setFailCallback(array($this, 'onFail'));
+                $job->finish(Dispatcher::dispatch($job, $this));
             }
 
             // build a queue of hosts for each hostgroup
