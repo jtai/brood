@@ -96,8 +96,8 @@ class Overlord
                 foreach ($hostsThisRun as $host) {
                     $functionName = Gearman\Util::getFunctionName($host);
                     $this->logger->log(Logger::INFO, __CLASS__, sprintf(
-                        'Dispatching %s to %s (member of hostgroup %s)',
-                        $action->getClass(), $functionName, $hostGroupName
+                        'Dispatching %s to %s',
+                        $action->getClass(), $functionName
                     ));
                     $client->addTask($functionName, $workload);
                 }
