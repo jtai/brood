@@ -4,9 +4,6 @@ namespace Brood\Log;
 
 class Logger
 {
-    const EMERG   = 0;  // Emergency: system is unusable
-    const ALERT   = 1;  // Alert: action must be taken immediately
-    const CRIT    = 2;  // Critical: critical conditions
     const ERR     = 3;  // Error: error conditions
     const WARN    = 4;  // Warning: warning conditions
     const NOTICE  = 5;  // Notice: normal but significant condition
@@ -17,7 +14,7 @@ class Logger
 
     public function log($priority, $tag, $message)
     {
-        printf("[%s] %s: %s\n", $this->translatePriority($priority), $tag, $message);
+        printf("%s %s %s: %s\n", date('M d H:i:s'), $this->translatePriority($priority), $tag, $message);
         $this->lastEntry = array($priority, $tag, $message);
     }
 
@@ -37,7 +34,7 @@ class Logger
 
     protected function translatePriority($priority)
     {
-        $priorities = array('EMERG', 'ALERT', 'CRIT', 'ERR', 'WARN', 'NOTICE', 'INFO', 'DEBUG');
+        $priorities = array(3 => 'EE', 'WW', 'NN', 'II', '**');
         return $priorities[$priority];
     }
 }
