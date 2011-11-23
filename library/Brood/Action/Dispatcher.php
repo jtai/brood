@@ -21,10 +21,13 @@ class Dispatcher
      */
     public static function dispatch(\GearmanJob $job, $context)
     {
-        list($configHash, $actionIndex) = explode(' ', Gearman\Util::decodeWorkload($job->workload()));
-
         $config = $context->getConfig();
         $logger = $context->getLogger();
+
+        $logger->log(Logger::DEBUG, __CLASS__, sprintf('Received workload "%s" at function "%s"', $job->workload(), $job->functionName()));
+        $job->sendData($logger->serializeEntry());
+
+        list($configHash, $actionIndex) = explode(' ', Gearman\Util::decodeWorkload($job->workload()));
 
         // this limitation will be removed in future versions
         if ($config->getConfigHash() != $configHash) {

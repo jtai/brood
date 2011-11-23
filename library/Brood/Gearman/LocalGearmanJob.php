@@ -244,6 +244,10 @@ class LocalGearmanJob extends \GearmanJob
 
     protected function triggerCallback($callback, $data = '', $isStatus = false)
     {
+        if (empty($callback)) {
+            return;
+        }
+
         $task = new LocalGearmanTask();
         $task->setFunctionName($this->functionName);
         $task->setJobHandle('H.localgearmanjob.' . self::$serial);

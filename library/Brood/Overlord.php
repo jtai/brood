@@ -50,14 +50,22 @@ class Overlord
                     'Dispatching %s locally',
                     $action->getClass()
                 ));
+                $this->logger->log(Logger::DEBUG, __CLASS__, sprintf(
+                    'Sent workload "%s" to function "%s"',
+                    $workload, $functionName
+                ));
 
                 // create dummy gearman job that we can call action class with
                 $job = new Gearman\LocalGearmanJob();
                 $job->setFunctionName($functionName);
                 $job->setWorkload($workload);
-                $job->setDataCallback(array($this, 'onData'));
+
+                // don't set data callback, otherwise all local jobs will be logged twice --
+                // once directly, and once through the data callback
+                //$job->setDataCallback(array($this, 'onData'));
                 $job->setCompleteCallback(array($this, 'onComplete'));
                 $job->setFailCallback(array($this, 'onFail'));
+
                 $job->finish(Dispatcher::dispatch($job, $this));
             }
 
@@ -110,7 +118,11 @@ class Overlord
                     $functionName = Gearman\Util::getFunctionName($host);
                     $this->logger->log(Logger::NOTICE, __CLASS__, sprintf(
                         'Dispatching %s to %s',
-                        $action->getClass(), $functionName
+                        $action->getClass(), $host
+                    ));
+                    $this->logger->log(Logger::DEBUG, __CLASS__, sprintf(
+                        'Sent workload "%s" to function "%s"',
+                        $workload, $functionName
                     ));
                     $client->addTask($functionName, $workload);
                 }
