@@ -34,14 +34,17 @@ abstract class AbstractAction implements Action
 
     public function getParameter($param)
     {
-        return $this->action->getParameters($param);
+        $parameters = $this->action->getParameters();
+        if (isset($parameters)) {
+            return $parameters->$param;
+        }
     }
 
     public function getRequiredParam($param)
     {
         $value = $this->getParameter($param);
         if (!isset($value[0])) {
-            throw new \RuntimeException(sprintf('"%s" configuration parameter is required by %s', get_class($this->action), $param));
+            throw new \RuntimeException(sprintf('"%s" configuration parameter is required by %s', $param, get_class($this->action)));
         }
         return $value;
     }
