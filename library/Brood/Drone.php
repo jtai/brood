@@ -47,7 +47,7 @@ class Drone
         $worker->addFunction($functionName, $callback, $this);
 
         $this->logger->log(Logger::DEBUG, __CLASS__, sprintf(
-            'Connecting to %s and waiting for a %s job',
+            'Connecting to %s, waiting for a %s job',
             join(',', array_keys($this->config->getGearmanServers())), $functionName
         ));
 

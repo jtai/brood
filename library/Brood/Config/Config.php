@@ -11,9 +11,9 @@ class Config
         $this->xml = new \SimpleXmlElement($xml);
     }
 
-    public function getConfigHash()
+    public function getXml()
     {
-        return sha1($this->xml->asXml());
+        return $this->xml->asXml();
     }
 
     public function getGearmanTimeout()

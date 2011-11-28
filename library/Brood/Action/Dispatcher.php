@@ -3,6 +3,7 @@
 namespace Brood\Action;
 
 use Brood\Gearman,
+    Brood\Config\Config,
     Brood\Log\Logger as Logger;
 
 class Dispatcher
@@ -21,22 +22,14 @@ class Dispatcher
      */
     public static function dispatch(\GearmanJob $job, $context)
     {
-        $config = $context->getConfig();
+        list($actionIndex, $xml) = explode(' ', Gearman\Util::decodeWorkload($job->workload()), 2);
+
         $logger = $context->getLogger();
 
-        $logger->log(Logger::DEBUG, __CLASS__, sprintf('Received workload "%s" at function "%s"', $job->workload(), $job->functionName()));
+        $logger->log(Logger::DEBUG, __CLASS__, sprintf('Received job, actionIndex = %d, xml is %d bytes', $actionIndex, strlen($xml)));
         $job->sendData($logger->serializeEntry());
 
-        list($configHash, $actionIndex) = explode(' ', Gearman\Util::decodeWorkload($job->workload()));
-
-        // this limitation will be removed in future versions
-        if ($config->getConfigHash() != $configHash) {
-            $logger->log(Logger::ERR, __CLASS__, 'Configuration on overload does not match configuration on drone');
-            $job->sendData($logger->serializeEntry());
-            $job->sendFail();
-            return;
-        }
-
+        $config = new Config($xml);
         $actions = $config->getActions();
 
         if (!isset($actions[$actionIndex])) {

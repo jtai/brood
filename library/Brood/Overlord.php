@@ -39,11 +39,11 @@ class Overlord
         $client->setCompleteCallback(array($this, 'onComplete'));
         $client->setFailCallback(array($this, 'onFail'));
 
-        $configHash = $this->config->getConfigHash();
+        $xml = $this->config->getXml();
         $hostGroups = $this->config->getHostGroups();
 
         foreach ($this->config->getActions() as $actionIndex => $action) {
-            $workload = Gearman\Util::encodeWorkload($configHash . ' ' . $actionIndex);
+            $workload = Gearman\Util::encodeWorkload($actionIndex . ' ' . $xml);
 
             if ($action->getOverlord()) {
                 $functionName = Gearman\Util::getFunctionName('overlord');
