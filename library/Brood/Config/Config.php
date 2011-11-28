@@ -6,9 +6,9 @@ class Config
 {
     protected $xml;
 
-    public function __construct($filename)
+    public function __construct($xml)
     {
-        $this->xml = new \SimpleXmlElement($filename, 0, true);
+        $this->xml = new \SimpleXmlElement($xml);
     }
 
     public function getConfigHash()
