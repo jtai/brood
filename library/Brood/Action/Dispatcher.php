@@ -64,7 +64,7 @@ class Dispatcher
         try {
             $action->setContext($job, $config, $actionIndex, $logger);
         } catch (\Exception $e) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('%s::setContext() threw an exception: %s: %s', get_class($e), $e->getMessage()));
+            $logger->log(Logger::ERR, __CLASS__, sprintf('%s::setContext() threw an exception: %s: %s', $class, get_class($e), $e->getMessage()));
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
@@ -73,7 +73,7 @@ class Dispatcher
         try {
             return $action->execute();
         } catch (\Exception $e) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('%s::execute() threw an exception: %s: %s', get_class($e), $e->getMessage()));
+            $logger->log(Logger::ERR, __CLASS__, sprintf('%s::execute() threw an exception: %s: %s', $class, get_class($e), $e->getMessage()));
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
