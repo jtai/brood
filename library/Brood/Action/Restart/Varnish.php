@@ -2,7 +2,7 @@
 
 namespace Brood\Action\Restart;
 
-class Varnish extends Init
+class Varnish extends SystemVService
 {
     protected $service = 'varnish';
 }

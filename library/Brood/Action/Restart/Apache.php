@@ -2,7 +2,7 @@
 
 namespace Brood\Action\Restart;
 
-class Apache extends Init
+class Apache extends SystemVService
 {
     public function __construct()
     {

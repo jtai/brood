@@ -5,7 +5,7 @@ namespace Brood\Action\Restart;
 use Brood\Action\AbstractAction,
     Brood\Log\Logger;
 
-class Init extends AbstractAction
+class SystemVService extends AbstractAction
 {
     /**
      * Name of the script in /etc/init.d to invoke
