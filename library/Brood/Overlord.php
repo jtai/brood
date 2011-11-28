@@ -70,6 +70,10 @@ class Overlord
                 $job->finish(Dispatcher::dispatch($job, $this));
             }
 
+            if ($this->failedJobs) {
+                break;
+            }
+
             // build a queue of hosts for each hostgroup
             $queues = array();
 
