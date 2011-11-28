@@ -16,7 +16,12 @@ class SystemVService extends AbstractAction
 
     public function execute()
     {
-        $command = sprintf('/etc/init.d/%s restart 2>&1', $this->service);
+        $verb = $this->getParameter('verb');
+        if (!isset($verb[0])) {
+            $verb = 'restart';
+        }
+
+        $command = sprintf('/etc/init.d/%s %s 2>&1', $this->service, $verb);
 
         exec($command, $output, $retval);
 
