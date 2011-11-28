@@ -5,7 +5,7 @@ namespace Brood\Action;
 use Brood\Config\Config,
     Brood\Log\Logger;
 
-class HelloWorld implements Action
+class HelloWorld extends AbstractAction
 {
     public function execute(\GearmanJob $job, Config $config, $actionIndex, Logger $logger)
     {
