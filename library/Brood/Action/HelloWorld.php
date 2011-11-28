@@ -2,14 +2,12 @@
 
 namespace Brood\Action;
 
-use Brood\Config\Config,
-    Brood\Log\Logger;
+use Brood\Log\Logger;
 
 class HelloWorld extends AbstractAction
 {
-    public function execute(\GearmanJob $job, Config $config, $actionIndex, Logger $logger)
+    public function execute()
     {
-        $logger->log(Logger::INFO, __CLASS__, 'Hello world!');
-        $job->sendData($logger->serializeEntry());
+        $this->log(Logger::INFO, __CLASS__, 'Hello world!');
     }
 }

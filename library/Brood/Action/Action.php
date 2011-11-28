@@ -7,5 +7,6 @@ use Brood\Config\Config,
 
 interface Action
 {
-    public function execute(\GearmanJob $job, Config $config, $actionIndex, Logger $logger);
+    public function setContext(\GearmanJob $job, Config $config, $actionIndex, Logger $logger);
+    public function execute();
 }
