@@ -55,7 +55,7 @@ class Dispatcher
         try {
             $action = new $class();
         } catch (\Exception $e) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('Unable to load action class "%s"', $class));
+            $logger->log(Logger::ERR, __CLASS__, sprintf('Unable to load action class "%s": %s: %s', $class, get_class($e), $e->getMessage()));
             $job->sendData($logger->serializeEntry());
             $job->sendFail();
             return;
