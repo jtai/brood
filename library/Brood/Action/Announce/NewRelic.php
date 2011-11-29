@@ -18,7 +18,9 @@ class NewRelic extends AbstractAction
 
         foreach (array('changelog', 'description', 'revision', 'user') as $param) {
             $value = (string) $this->getParameter($param);
-            $args[] = sprintf('-d %s', escapeshellarg('deployment['. $param .']=' . $value));
+            if (!empty($value)) {
+                $args[] = sprintf('-d %s', escapeshellarg('deployment['. $param .']=' . $value));
+            }
         }
 
         foreach ($this->getParameter('app_name') as $name) {
