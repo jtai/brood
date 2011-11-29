@@ -81,6 +81,14 @@ class Overlord
             $concurrency = array();
 
             foreach ($action->getHostGroups() as $hostGroupName => $hostGroupInfo) {
+                if (!isset($hostGroups[$hostGroupName])) {
+                    $this->logger->log(Logger::WARN, __CLASS__, sprintf(
+                        'Host group "%s" does not exist, referenced by %s',
+                        $hostGroupName, $action->getClass()
+                    ));
+                    continue;
+                }
+
                 $hostGroup = $hostGroups[$hostGroupName];
                 foreach (array_keys($hostGroup->getHosts()) as $host) {
                     $queues[$hostGroupName][] = $host;
