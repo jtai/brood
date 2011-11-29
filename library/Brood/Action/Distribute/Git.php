@@ -2,7 +2,8 @@
 
 namespace Brood\Action\Distribute;
 
-use Brood\Action\AbstractAction;
+use Brood\Action\AbstractAction,
+    Brood\Log\Logger;
 
 class Git extends AbstractAction
 {
@@ -11,6 +12,8 @@ class Git extends AbstractAction
         if (!$this->chdir($this->getRequiredParameter('directory'))) {
             return;
         }
+
+        $this->log(Logger::INFO, __CLASS__, 'Performing git pull');
 
         // Use --ff-only to ensure that we don't have any local revisions that aren't
         // also at the remote. Forbidding local revisions helps all nodes stay in sync.
@@ -26,6 +29,8 @@ class Git extends AbstractAction
         // deployed was broken).
         $ref = (string) $this->getParameter('ref');
         if (!empty($ref)) {
+            $this->log(Logger::INFO, __CLASS__, sprintf('Performing git reset to "%s"', $ref));
+
             $command = sprintf('git reset --hard %s', escapeshellarg($ref));
             unset($output);
 
@@ -37,6 +42,8 @@ class Git extends AbstractAction
         // If the clean parameter is present, clean up any build artifacts or temp files.
         $clean = $this->getParameter('clean');
         if (isset($clean[0])) {
+            $this->log(Logger::INFO, __CLASS__, 'Removing untracked and ignored files and directories');
+
             $command = sprintf('git clean -dxf');
             unset($output);
 

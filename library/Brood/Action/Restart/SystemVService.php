@@ -2,7 +2,8 @@
 
 namespace Brood\Action\Restart;
 
-use Brood\Action\AbstractAction;
+use Brood\Action\AbstractAction,
+    Brood\Log\Logger;
 
 class SystemVService extends AbstractAction
 {
@@ -19,6 +20,14 @@ class SystemVService extends AbstractAction
         if (empty($verb)) {
             $verb = 'restart';
         }
+
+        if ($verb == 'stop') {
+            $presentParticiple = 'stopping';
+        } else {
+            $presentParticiple = $verb . 'ing';
+        }
+
+        $this->log(Logger::INFO, __CLASS__, sprintf('%s %s', ucfirst($presentParticiple), $this->service));
 
         $command = sprintf('/etc/init.d/%s %s 2>&1', $this->service, $verb);
         unset($output);
