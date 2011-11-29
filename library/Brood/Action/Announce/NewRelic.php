@@ -16,11 +16,24 @@ class NewRelic extends AbstractAction
         $apikey = (string) $this->getRequiredParameter('api_key');
         $args[] = sprintf('-H %s', escapeshellarg('x-api-key:' . $apikey));
 
-        foreach (array('changelog', 'description', 'revision', 'user') as $param) {
-            $value = (string) $this->getParameter($param);
-            if (!empty($value)) {
-                $args[] = sprintf('-d %s', escapeshellarg('deployment['. $param .']=' . $value));
-            }
+        $changelog = (string) $this->getParameter('changelog');
+        if (!empty($changelog)) {
+            $args[] = sprintf('-d %s', escapeshellarg('deployment[changelog]=' . $changelog));
+        }
+
+        $description = (string) $this->getParameter('description');
+        if (!empty($description)) {
+            $args[] = sprintf('-d %s', escapeshellarg('deployment[description]=' . $description));
+        }
+
+        $revision = (string) $this->getParameter('to_revision');
+        if (!empty($revision)) {
+            $args[] = sprintf('-d %s', escapeshellarg('deployment[revision]=' . $revision));
+        }
+
+        $user = (string) $this->getParameter('user');
+        if (!empty($user)) {
+            $args[] = sprintf('-d %s', escapeshellarg('deployment[user]=' . $user));
         }
 
         foreach ($this->getParameter('app_name') as $name) {
