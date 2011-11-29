@@ -1,10 +1,10 @@
 <?php
 
-namespace Brood\Action\Distribute\Git;
+namespace Brood\Action\Distribute;
 
 use Brood\Action\AbstractAction;
 
-class DeployRef extends AbstractAction
+class Git extends AbstractAction
 {
     public function execute()
     {
