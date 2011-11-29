@@ -40,7 +40,7 @@ abstract class AbstractAction implements Action
         }
     }
 
-    public function getRequiredParam($param)
+    public function getRequiredParameter($param)
     {
         $value = $this->getParameter($param);
         if (!isset($value[0])) {
