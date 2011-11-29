@@ -44,7 +44,7 @@ abstract class AbstractAction implements Action
     {
         $value = $this->getParameter($param);
         if (!isset($value[0])) {
-            throw new \RuntimeException(sprintf('"%s" configuration parameter is required by %s', $param, get_class($this->action)));
+            throw new \RuntimeException(sprintf('"%s" configuration parameter is required by %s', $param, get_class($this)));
         }
         return $value;
     }

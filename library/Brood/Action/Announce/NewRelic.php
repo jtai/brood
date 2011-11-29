@@ -53,7 +53,7 @@ class NewRelic extends AbstractAction
         }
 
         if (!$this->notified) {
-            throw new \RuntimeException(sprintf('"app_name" or "application_id" configuration parameter is required by %s', get_class($this->action)));
+            throw new \RuntimeException(sprintf('"app_name" or "application_id" configuration parameter is required by %s', get_class($this)));
         }
    }
 
