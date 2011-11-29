@@ -25,16 +25,24 @@
         <overlord />
         <!-- Action classes can take custom parameters -->
         <parameters>
-            <email>team@example.com</email>
+            <!-- Can have multiple recipients -->
+            <to>team@example.com</to>
+            <from>deployments@example.com</from>
+            <subject>Deployment</subject>
         </parameters>
     </action>
     <action class="Distribute\Git\Pull">
         <!-- Actions are run on hostgroups/hosts concurrently -->
         <hostgroup>web</hostgroup>
         <hostgroup>gearman</hostgroup>
+        <parameters>
+            <sudo>deploy</sudo>
+            <directory>/var/www/exampleapp</directory>
+        </parameters>
     </action>
     <action class="Restart\Apache">
         <!-- Within a hostgroup, concurrency can be specified -->
+        <!-- This example restarts the web servers one at a time -->
         <hostgroup concurrency="1">web</hostgroup>
     </action>
     <action class="Restart\Gearman">
