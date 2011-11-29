@@ -52,8 +52,8 @@ class Overlord
                     $action->getClass()
                 ));
                 $this->logger->log(Logger::DEBUG, __CLASS__, sprintf(
-                    'Sent workload "%s" to function "%s"',
-                    $workload, $functionName
+                    'Sent job to function "%s", actionIndex = %d, xml is %d bytes',
+                    $functionName, $actionIndex, strlen($xml)
                 ));
 
                 // create dummy gearman job that we can call action class with
@@ -126,8 +126,8 @@ class Overlord
                         $action->getClass(), $host
                     ));
                     $this->logger->log(Logger::DEBUG, __CLASS__, sprintf(
-                        'Sent workload "%s" to function "%s"',
-                        $workload, $functionName
+                        'Sent job to function "%s", actionIndex = %d, xml is %d bytes',
+                        $functionName, $actionIndex, strlen($xml)
                     ));
                     $client->addTask($functionName, $workload);
                 }
