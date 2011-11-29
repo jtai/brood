@@ -48,4 +48,45 @@ abstract class AbstractAction implements Action
         }
         return $value;
     }
+
+    /**
+     * Wrapper for exec()
+     *
+     * Automatically wraps command with sudo if sudo parameter is specified in
+     * configuration.
+     *
+     * @param string $command The command that will be executed. Passed by reference, will be modified to reflect sudo call if sudo configuration parameter is present.
+     * @param array $output If the output argument is present, then the specified array will be filled with every line of output from the command.
+     * @param int $return_var If the return_var argument is present along with the output argument, then the return status of the executed command will be written to this variable.
+     * @param bool $handleOutputAndRetval If $handleOutputAndRetval is true (the default), output from the command will be logged as DEBUG messages. Also, if the command exists non-zero, an ERR will be logged, and sendFail() will be called on the Gearman job. Setting $handleOutputAndRetval to false disables any sort of result handling and returns immediately after calling exec().
+     * @return bool True on success (command exited 0), false otherwise
+     */
+    public function exec(&$command, &$output, &$return_var, $handleOutputAndRetval = true)
+    {
+        $sudo = (string) $this->getParameter('sudo');
+        if ($sudo) {
+            $command = sprintf('sudo -u %s -- %s', escapeshellarg($sudo), $command);
+        }
+
+        exec($command, $output, $return_var);
+
+        // if we're not handling the result, return immediately
+        if (!$handleOutputAndRetval) {
+            return $return_var === 0;
+        }
+
+        if ($return_var !== 0) {
+            $this->log(Logger::ERR, get_class($this), sprintf('"%s" exited %d', $command, $return_var));
+        }
+
+        foreach ($output as $line) {
+            $this->log(Logger::DEBUG, get_class($this), $line);
+        }
+
+        if ($return_var !== 0) {
+            $this->job->sendFail();
+        }
+
+        return $return_var === 0;
+    }
 }
