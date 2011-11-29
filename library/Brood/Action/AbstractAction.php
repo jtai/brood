@@ -64,9 +64,11 @@ abstract class AbstractAction implements Action
     public function exec(&$command, &$output, &$return_var, $handleOutputAndRetval = true)
     {
         $sudo = (string) $this->getParameter('sudo');
-        if ($sudo) {
+        if (!empty($sudo)) {
             $command = sprintf('sudo -u %s -- %s', escapeshellarg($sudo), $command);
         }
+
+        $this->log(Logger::DEBUG, get_class($this), $command);
 
         exec($command, $output, $return_var);
 
@@ -88,5 +90,21 @@ abstract class AbstractAction implements Action
         }
 
         return $return_var === 0;
+    }
+
+    public function chdir($directory, $handleOutputAndRetval = true)
+    {
+        $success = @chdir($directory);
+
+        if (!$handleOutputAndRetval) {
+            return $success;
+        }
+
+        if (!$success) {
+            $this->log(Logger::ERR, get_class($this), sprintf('Unable to chdir to "%s"', $directory));
+            $this->job->sendFail();
+        }
+
+        return $success;
     }
 }
