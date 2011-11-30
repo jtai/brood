@@ -51,10 +51,9 @@ class Dispatcher
 
         $class = $actions[$actionIndex]->getClass();
         if (!empty($class) && $class{0} != '\\') {
-            $class = '\Brood\Action\\' . $class;
+            $class = '\\' . $class;
         }
 
-        // this depends on an autoloader being configured
         try {
             $action = new $class();
         } catch (\Exception $e) {

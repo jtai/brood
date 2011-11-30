@@ -20,7 +20,7 @@
 
     <!-- Actions to run, each will be run in order, serially -->
     <!-- The Overlord coordinates the execution of these actions -->
-    <action class="Announce\Email">
+    <action class="Brood\Action\Announce\Email">
         <!-- Run this action on the Overlord itself (no Gearman involvement) -->
         <overlord />
         <!-- Action classes can take custom parameters -->
@@ -31,7 +31,7 @@
             <subject>Deployment</subject>
         </parameters>
     </action>
-    <action class="Distribute\Git\Pull">
+    <action class="Brood\Action\Distribute\Git\Pull">
         <!-- Actions are run on hostgroups/hosts concurrently -->
         <hostgroup>web</hostgroup>
         <hostgroup>gearman</hostgroup>
@@ -40,12 +40,12 @@
             <directory>/var/www/exampleapp</directory>
         </parameters>
     </action>
-    <action class="Restart\Apache">
+    <action class="Brood\Action\Restart\Apache">
         <!-- Within a hostgroup, concurrency can be specified -->
         <!-- This example restarts the web servers one at a time -->
         <hostgroup concurrency="1">web</hostgroup>
     </action>
-    <action class="Restart\Gearman">
+    <action class="Brood\Action\Restart\Gearman">
         <hostgroup>gearman</hostgroup>
     </action>
 </brood>
