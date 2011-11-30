@@ -52,4 +52,20 @@ class Config
         }
         return $actions;
     }
+
+    public function getParameter($param)
+    {
+        if (isset($this->xml->parameters[0])) {
+            return $this->xml->parameters[0]->$param;
+        }
+    }
+
+    public function addParameter($param, $value)
+    {
+        if (!isset($this->xml->parameters[0])) {
+            $this->xml->addChild('parameters');
+        }
+
+        $this->xml->parameters[0]->addChild($param, $value);
+    }
 }
