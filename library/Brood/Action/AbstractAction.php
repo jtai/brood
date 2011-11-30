@@ -34,7 +34,14 @@ abstract class AbstractAction implements Action
 
     public function getParameter($param)
     {
-        return $this->action->getParameter($param);
+        $value = $this->action->getParameter($param);
+
+        // look in global config if we don't find the param in the action
+        if (!isset($value[0])) {
+            $value = $this->config->getParameter($param);
+        }
+
+        return $value;
     }
 
     public function getRequiredParameter($param)
