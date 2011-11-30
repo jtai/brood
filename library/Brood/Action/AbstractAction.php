@@ -70,6 +70,11 @@ abstract class AbstractAction implements Action
         $return = exec($command, $output, $return_var);
 
         foreach ($output as $line) {
+            // skip empty lines
+            if (trim($line) == '') {
+                continue;
+            }
+
             $this->log(Logger::DEBUG, get_class($this), $line);
         }
 
