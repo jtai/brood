@@ -36,26 +36,32 @@ class NewRelic extends AbstractAction
             $args[] = sprintf('-d %s', escapeshellarg('deployment[user]=' . $user));
         }
 
-        foreach ($this->getParameter('app_name') as $name) {
-            $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
+        $names = $this->getParameter('app_name');
+        if (isset($names[0])) {
+            foreach ($names as $name) {
+                $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
 
-            $this->doRequest(array_merge($args, array(
-                sprintf('-d %s', escapeshellarg('deployment[app_name]=' . $name))
-            )));
+                $this->doRequest(array_merge($args, array(
+                    sprintf('-d %s', escapeshellarg('deployment[app_name]=' . $name))
+                )));
+            }
         }
 
-        foreach ($this->getParameter('application_id') as $id) {
-            $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
+        $ids = $this->getParameter('application_id');
+        if (isset($ids[0])) {
+            foreach ($ids as $id) {
+                $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
 
-            $this->doRequest(array_merge($args, array(
-                sprintf('-d %s', escapeshellarg('deployment[application_id]=' . $id))
-            )));
+                $this->doRequest(array_merge($args, array(
+                    sprintf('-d %s', escapeshellarg('deployment[application_id]=' . $id))
+                )));
+            }
         }
 
         if (!$this->notified) {
             throw new \RuntimeException(sprintf('"app_name" or "application_id" configuration parameter is required by %s', get_class($this)));
         }
-   }
+    }
 
     protected function doRequest($args)
     {
