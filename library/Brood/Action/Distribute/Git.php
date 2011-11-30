@@ -13,8 +13,8 @@ class Git extends AbstractAction
 
         $this->log(Logger::INFO, __CLASS__, 'Performing git pull');
 
-        // Use --ff-only to ensure that we don't have any local revisions that aren't
-        // also at the remote. Forbidding local revisions helps all nodes stay in sync.
+        // Use --ff-only to ensure that we don't have any local commits that aren't
+        // also at the remote. Forbidding local commits helps all nodes stay in sync.
         $command = 'git pull --ff-only';
         unset($output);
 

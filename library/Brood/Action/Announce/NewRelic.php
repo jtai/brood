@@ -21,7 +21,7 @@ class NewRelic extends AbstractAction
             $args[] = sprintf('-d %s', escapeshellarg('deployment[changelog]=' . $changelog));
         }
 
-        $description = (string) $this->getParameter('description');
+        $description = (string) $this->getParameter('message');
         if (!empty($description)) {
             $args[] = sprintf('-d %s', escapeshellarg('deployment[description]=' . $description));
         }

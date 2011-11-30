@@ -15,7 +15,7 @@ class Email extends AbstractAction
         $message = sprintf(
             "User: %s\n\n%s\n\nChanged Files:\n%s",
             $this->getParameter('user'),
-            $this->getParameter('description'),
+            $this->getParameter('message'),
             $this->getParameter('changelog')
         );
 
