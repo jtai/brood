@@ -13,7 +13,7 @@ class Overlord
     protected $logger;
     protected $failedJobs = false;
 
-    public function __construct(Config $config, $logLevel = Logger::DEBUG)
+    public function __construct(Config $config, $logLevel = Logger::INFO)
     {
         $this->config = $config;
         $this->logger = new Logger($logLevel);
