@@ -34,7 +34,7 @@ abstract class AbstractAction implements Action
 
     public function getParameter($param)
     {
-        return $this->config->getParameter($param);
+        return $this->action->getParameter($param);
     }
 
     public function getRequiredParameter($param)
