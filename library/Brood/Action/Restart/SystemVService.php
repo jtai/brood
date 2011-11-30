@@ -32,6 +32,6 @@ class SystemVService extends AbstractAction
         $command = sprintf('/etc/init.d/%s %s 2>&1', $this->service, $verb);
         unset($output);
 
-        $this->exec($command, $output, $return_var);
+        $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
     }
 }

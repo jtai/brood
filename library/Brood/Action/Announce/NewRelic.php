@@ -62,7 +62,7 @@ class NewRelic extends AbstractAction
         $command = 'curl -s ' . join(' ', $args) . ' https://rpm.newrelic.com/deployments.xml';
         unset($output);
 
-        $this->exec($command, $output, $return_var);
+        $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
 
         $this->notified++;
     }

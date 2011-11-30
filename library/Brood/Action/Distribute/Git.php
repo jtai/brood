@@ -9,9 +9,7 @@ class Git extends AbstractAction
 {
     public function execute()
     {
-        if (!$this->chdir($this->getRequiredParameter('directory'))) {
-            return;
-        }
+        $this->chdir($this->getRequiredParameter('directory'));
 
         $this->log(Logger::INFO, __CLASS__, 'Performing git pull');
 
@@ -20,9 +18,7 @@ class Git extends AbstractAction
         $command = 'git pull --ff-only';
         unset($output);
 
-        if (!$this->exec($command, $output, $return_var)) {
-            return;
-        }
+        $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
 
         // If the ref parameter is present, reset to that ref. This allows us to "roll
         // back" to a previous commit or tag if a deploy fails (or if the code that was
@@ -34,9 +30,7 @@ class Git extends AbstractAction
             $command = sprintf('git reset --hard %s', escapeshellarg($ref));
             unset($output);
 
-            if (!$this->exec($command, $output, $return_var)) {
-                return;
-            }
+            $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
         }
 
         // If the clean parameter is present, clean up any build artifacts or temp files.
@@ -47,9 +41,7 @@ class Git extends AbstractAction
             $command = sprintf('git clean -dxf');
             unset($output);
 
-            if (!$this->exec($command, $output, $return_var)) {
-                return;
-            }
+            $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
         }
     }
 }
