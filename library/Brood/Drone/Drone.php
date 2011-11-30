@@ -1,6 +1,6 @@
 <?php
 
-namespace Brood;
+namespace Brood\Drone;
 
 use Brood\Config\Config,
     Brood\Gearman,

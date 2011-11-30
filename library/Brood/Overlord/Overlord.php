@@ -1,6 +1,6 @@
 <?php
 
-namespace Brood;
+namespace Brood\Overlord;
 
 use Brood\Config\Config,
     Brood\Gearman,

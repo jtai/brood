@@ -17,7 +17,7 @@ class Dispatcher
      * what class we need to instantiate, then call the class' execute() method.
      *
      * @param GearmanJob $job
-     * @param Brood\Overlord|Brood\Drone $context
+     * @param Brood\Overlord\Overlord|Brood\Drone\Drone $context
      * @return mixed
      */
     public static function dispatch(\GearmanJob $job, $context)
