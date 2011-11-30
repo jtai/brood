@@ -39,6 +39,16 @@ class Dispatcher
             return;
         }
 
+        $file = $actions[$actionIndex]->getFile();
+        if (!empty($file)) {
+            if ($file{0} == '/') {
+                include $file;
+            } else {
+                $root = dirname(dirname(dirname(__DIR__)));
+                include $root . '/' . $file;
+            }
+        }
+
         $class = $actions[$actionIndex]->getClass();
         if (!empty($class) && $class{0} != '\\') {
             $class = '\Brood\Action\\' . $class;

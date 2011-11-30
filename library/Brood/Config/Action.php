@@ -18,6 +18,13 @@ class Action
         }
     }
 
+    public function getFile()
+    {
+        if (isset($this->xml['file'])) {
+            return (string) $this->xml['file'];
+        }
+    }
+
     public function getAttributes()
     {
         return $this->xml->attributes();
