@@ -14,10 +14,10 @@ if ($options->getMessage()) {
     $config->addParameter('message', $options->getMessage());
 }
 if ($options->getPrevRef()) {
-    $config->addParameter('prev_ref', $options->getGetPrevRef());
+    $config->addParameter('prev_ref', $options->getPrevRef());
 }
 if ($options->getRef()) {
-    $config->addParameter('ref', $options->getGetRef());
+    $config->addParameter('ref', $options->getRef());
 }
 
 $overlord = new \Brood\Overlord\Overlord($config, $options->getLogLevel());
