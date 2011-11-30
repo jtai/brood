@@ -26,7 +26,7 @@ class NewRelic extends AbstractAction
             $args[] = sprintf('-d %s', escapeshellarg('deployment[description]=' . $description));
         }
 
-        $revision = (string) $this->getParameter('to_revision');
+        $revision = (string) $this->getParameter('ref');
         if (!empty($revision)) {
             $args[] = sprintf('-d %s', escapeshellarg('deployment[revision]=' . $revision));
         }

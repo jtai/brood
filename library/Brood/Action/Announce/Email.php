@@ -23,8 +23,8 @@ class Email extends AbstractAction
         if (!empty($diffUrl)) {
             $message .= sprintf(
                 "\n\n" . $diffUrl,
-                $this->getParameter('from_revision'),
-                $this->getParameter('to_revision')
+                $this->getParameter('prev_ref'),
+                $this->getParameter('ref')
             );
         }
 
