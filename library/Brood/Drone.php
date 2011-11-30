@@ -10,13 +10,12 @@ class Drone
 {
     protected $config;
     protected $logger;
-    protected $hostname;
 
-    public function __construct(Config $config, $logLevel = Logger::DEBUG, $hostname = null)
+    public function __construct(Config $config, $logLevel = Logger::DEBUG)
     {
         $this->config = $config;
         $this->logger = new Logger($logLevel);
-        $this->hostname = $hostname === null ? gethostname() : $hostname;
+
     }
 
     public function getConfig()
@@ -29,20 +28,15 @@ class Drone
         return $this->logger;
     }
 
-    public function getHostname()
-    {
-        return $this->hostname;
-    }
-
     public function run()
     {
         $this->logger->log(Logger::NOTICE, __CLASS__, sprintf(
-            'Drone starting up on %s', $this->hostname
+            'Drone starting up on %s', $this->getHostname()
         ));
 
         $worker = Gearman\Factory::workerFactory($this->config);
 
-        $functionName = Gearman\Util::getFunctionName($this->hostname);
+        $functionName = Gearman\Util::getFunctionName($this->getHostname());
         $callback = array('\Brood\Action\Dispatcher', 'dispatch');
         $worker->addFunction($functionName, $callback, $this);
 
@@ -68,5 +62,16 @@ class Drone
                 $this->logger->log(Logger::ERR, __CLASS__, $worker->error());
                 break;
         }
+    }
+
+    public function getHostname()
+    {
+        $hostname = (string) $config->getParameter('hostname');
+
+        if (!empty($hostname)) {
+            return $hostname;
+        }
+
+        return gethostname();
     }
 }
