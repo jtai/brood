@@ -66,7 +66,7 @@ class Drone
 
     public function getHostname()
     {
-        $hostname = (string) $config->getParameter('hostname');
+        $hostname = (string) $this->config->getParameter('hostname');
 
         if (!empty($hostname)) {
             return $hostname;
