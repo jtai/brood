@@ -26,6 +26,11 @@ abstract class AbstractAction implements Action
         $this->action = $actions[$actionIndex];
     }
 
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     public function log($priority, $tag, $message)
     {
         $this->logger->log($priority, $tag, $message);
