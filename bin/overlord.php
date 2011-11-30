@@ -19,6 +19,9 @@ if ($options->getPrevRef()) {
 if ($options->getRef()) {
     $config->addParameter('ref', $options->getRef());
 }
+if ($options->getUser()) {
+    $config->addParameter('user', $options->getUser());
+}
 
 $overlord = new \Brood\Overlord\Overlord($config, $options->getLogLevel());
 $overlord->run();

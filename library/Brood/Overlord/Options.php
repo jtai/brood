@@ -11,7 +11,7 @@ class Options
     protected function parse()
     {
         if ($this->options === null) {
-            $this->options = getopt('c:hl:m:o:p:r:', array('config:', 'help', 'log-level:', 'message:', 'log-file:', 'prev-ref:', 'ref:'));
+            $this->options = getopt('c:hl:m:o:p:r:u:', array('config:', 'help', 'log-level:', 'message:', 'log-file:', 'prev-ref:', 'ref:', 'user:'));
         }
 
         return $this->options;
@@ -51,6 +51,7 @@ OPTIONS
   -o, --log-file   write DEBUG output to specified log file
   -p, --prev-ref   previous ref, primarily used by announce actions to link to diffs
   -r, --ref        ref to deploy, defaults to HEAD
+  -u, --user       user performing deploy, primarily used by announce actions
 
 EOF;
     }
@@ -121,5 +122,20 @@ EOF;
         if (isset($options['r'])) {
             return $options['r'];
         }
+    }
+
+    public function getUser()
+    {
+        $options = $this->parse();
+
+        if (isset($options['user'])) {
+            return $options['user'];
+        }
+
+        if (isset($options['u'])) {
+            return $options['u'];
+        }
+
+        return posix_getlogin();
     }
 }
