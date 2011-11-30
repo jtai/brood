@@ -53,8 +53,10 @@ class Action
         return $hosts;
     }
 
-    public function getParameters()
+    public function getParameter($param)
     {
-        return $this->xml->parameters[0];
+        if (isset($this->xml->parameters[0])) {
+            return $this->xml->parameters[0]->$param;
+        }
     }
 }
