@@ -39,12 +39,12 @@ class Logger
             list($priority, $tag, $message) = $this->lastEntry;
         }
 
-        return join(' ', array($priority, $tag, $message));
+        return serialize(array($priority, $tag, $message));
     }
 
     public function deserializeEntry($serialized)
     {
-        return explode(' ', $serialized, 3);
+        return unserialize($serialized);
     }
 
     protected function translatePriority($priority)
