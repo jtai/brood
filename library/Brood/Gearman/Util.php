@@ -9,11 +9,9 @@ class Util
 
     public static function getFunctionName($host)
     {
-        return join('_', array(
-            self::BROOD_PROTOCOL_MAGIC,
-            self::BROOD_PROTOCOL_VERSION,
-            $host
-        ));
+        // truncate hash to 20 chars to work around a bug in gearman where workloads
+        // would have extra bytes prepended to them if we use a long job name
+        return substr(sha1($host), 0, 20);
     }
 
     public static function encodeWorkload($workload)
