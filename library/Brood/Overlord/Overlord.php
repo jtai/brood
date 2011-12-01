@@ -60,6 +60,7 @@ class Overlord
                 $job = new Gearman\LocalGearmanJob();
                 $job->setFunctionName($functionName);
                 $job->setWorkload($workload);
+                $job->setContext('overlord');
 
                 // don't set data callback, otherwise all local jobs will be logged twice --
                 // once directly, and once through the data callback
@@ -137,7 +138,7 @@ class Overlord
                         'Sent job to function "%s", actionIndex = %d, xml is %d bytes',
                         $functionName, $actionIndex, strlen($xml)
                     ));
-                    $client->addTask($functionName, $workload);
+                    $client->addTask($functionName, $workload, $host);
                 }
 
                 // blocks until tasks finish
@@ -154,20 +155,20 @@ class Overlord
         $this->logger->log(Logger::NOTICE, __CLASS__, 'Overlord shutting down');
     }
 
-    public function onData(\GearmanTask $task)
+    public function onData(\GearmanTask $task, $context)
     {
         list($priority, $tag, $message) = $this->logger->deserializeEntry($task->data());
-        $this->logger->log($priority, sprintf('%s[%s]', $tag, $task->jobHandle()), $message);
+        $this->logger->log($priority, sprintf('%s[%s]', $tag, $context), $message);
     }
 
-    public function onComplete(\GearmanTask $task)
+    public function onComplete(\GearmanTask $task, $context)
     {
-        $this->logger->log(Logger::INFO, sprintf('%s[%s]', __CLASS__, $task->jobHandle()), 'Job returned success');
+        $this->logger->log(Logger::INFO, sprintf('%s[%s]', __CLASS__, $context), 'Job returned success');
     }
 
-    public function onFail(\GearmanTask $task)
+    public function onFail(\GearmanTask $task, $context)
     {
-        $this->logger->log(Logger::ERR, sprintf('%s[%s]', __CLASS__, $task->jobHandle()), 'Job returned failure');
+        $this->logger->log(Logger::ERR, sprintf('%s[%s]', __CLASS__, $context), 'Job returned failure');
         $this->failedJobs = true;
     }
 }

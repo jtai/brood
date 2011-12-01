@@ -16,6 +16,7 @@ class LocalGearmanJob extends \GearmanJob
     protected $functionName;
     protected $workload;
     protected $return = \GEARMAN_SUCCESS;
+    protected $context;
     protected $finished = false;
     protected $completeCallback;
     protected $failCallback;
@@ -82,6 +83,21 @@ class LocalGearmanJob extends \GearmanJob
     public function returnCode()
     {
         return $this->return;
+    }
+
+    /**
+     * Set context that callbacks are called with
+     *
+     * setContext() is a LocalGearmanJob extension; the context is set when the
+     * client calls addTask() in the regular GearmanJob.
+     *
+     * @param mixed $context
+     * @return LocalGearmanJob
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
+        return $this;
     }
 
     /**
@@ -257,7 +273,7 @@ class LocalGearmanJob extends \GearmanJob
         } else {
             $task->setData($data);
         }
-        call_user_func($callback, $task);
+        call_user_func($callback, $task, $this->context);
         return true;
     }
 
