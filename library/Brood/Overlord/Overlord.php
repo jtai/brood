@@ -11,7 +11,7 @@ class Overlord
 {
     protected $config;
     protected $logger;
-    protected $failedJobs = false;
+    protected $failedJobs = 0;
 
     public function __construct(Config $config, $logLevel = Logger::INFO)
     {
@@ -145,6 +145,8 @@ class Overlord
                 $client->runTasks();
 
                 if ($this->failedJobs) {
+                    $this->logger->log(Logger::ERR, __CLASS__, sprintf('%d job%s failed', $this->failedJobs, $this->failedJobs == 1 ? '' : 's'));
+
                     // http://xkcd.com/292
                     goto shutdown;
                 }
@@ -169,6 +171,6 @@ class Overlord
     public function onFail(\GearmanTask $task, $context)
     {
         $this->logger->log(Logger::ERR, sprintf('%s[%s]', __CLASS__, $context), 'Job returned failure');
-        $this->failedJobs = true;
+        $this->failedJobs++;
     }
 }
