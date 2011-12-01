@@ -41,12 +41,13 @@ class Overlord
 
         $xml = $this->config->getXml();
         $hostGroups = $this->config->getHostGroups();
+        $aliases = $this->config->getHostAliases();
 
         foreach ($this->config->getActions() as $actionIndex => $action) {
             $workload = Gearman\Util::encodeWorkload(array($xml, $actionIndex));
 
             if ($action->getOverlord()) {
-                $functionName = Gearman\Util::getFunctionName('overlord');
+                $functionName = Gearman\Util::getFunctionName('overlord.local');
                 $this->logger->log(Logger::NOTICE, __CLASS__, sprintf(
                     'Dispatching %s locally',
                     $action->getClass()
@@ -60,7 +61,7 @@ class Overlord
                 $job = new Gearman\LocalGearmanJob();
                 $job->setFunctionName($functionName);
                 $job->setWorkload($workload);
-                $job->setContext('overlord');
+                $job->setContext('overlord.local');
 
                 // don't set data callback, otherwise all local jobs will be logged twice --
                 // once directly, and once through the data callback
@@ -138,7 +139,7 @@ class Overlord
                         'Sent job to function "%s", actionIndex = %d, xml is %d bytes',
                         $functionName, $actionIndex, strlen($xml)
                     ));
-                    $client->addTask($functionName, $workload, $host);
+                    $client->addTask($functionName, $workload, isset($aliases[$host]) ? $aliases[$host] : $host);
                 }
 
                 // blocks until tasks finish

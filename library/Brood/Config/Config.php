@@ -53,6 +53,15 @@ class Config
         return $actions;
     }
 
+    public function getHostAliases()
+    {
+        $aliases = array();
+        foreach ($this->xml->xpath('//host[@alias]') as $host) {
+            $aliases[(string) $host] = $host['alias'];
+        }
+        return $aliases;
+    }
+
     public function getParameter($param)
     {
         if (isset($this->xml->parameters[0])) {
