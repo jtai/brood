@@ -31,7 +31,7 @@ class Overlord
 
     public function run()
     {
-        $this->logger->log(Logger::NOTICE, __CLASS__, 'Overlord starting up');
+        $this->logger->log(Logger::NOTICE, '[overlord] ' . __CLASS__, 'Overlord starting up');
 
         $client = Gearman\Factory::clientFactory($this->config);
 
@@ -48,11 +48,11 @@ class Overlord
 
             if ($action->getOverlord()) {
                 $functionName = Gearman\Util::getFunctionName('overlord.local');
-                $this->logger->log(Logger::NOTICE, __CLASS__, sprintf(
+                $this->logger->log(Logger::NOTICE, '[overlord] ' . __CLASS__, sprintf(
                     'Dispatching %s locally',
                     $action->getClass()
                 ));
-                $this->logger->log(Logger::DEBUG, __CLASS__, sprintf(
+                $this->logger->log(Logger::DEBUG, '[overlord] ' . __CLASS__, sprintf(
                     'Sent job to function "%s", actionIndex = %d, xml is %d bytes',
                     $functionName, $actionIndex, strlen($xml)
                 ));
@@ -63,13 +63,18 @@ class Overlord
                 $job->setWorkload($workload);
                 $job->setContext('overlord.local');
 
-                // don't set data callback, otherwise all local jobs will be logged twice --
-                // once directly, and once through the data callback
-                //$job->setDataCallback(array($this, 'onData'));
+                $job->setDataCallback(array($this, 'onData'));
                 $job->setCompleteCallback(array($this, 'onComplete'));
                 $job->setFailCallback(array($this, 'onFail'));
 
+                // disable direect printing of log messages; messages will be
+                // logged via the onData callback
+                $this->logger->disable();
+
                 $job->finish(Dispatcher::dispatch($job, $this));
+
+                // re-enable logger
+                $this->logger->enable();
             }
 
             if ($this->failedJobs) {
@@ -84,7 +89,7 @@ class Overlord
 
             foreach ($action->getHostGroups() as $hostGroupName => $hostGroupInfo) {
                 if (!isset($hostGroups[$hostGroupName])) {
-                    $this->logger->log(Logger::WARN, __CLASS__, sprintf(
+                    $this->logger->log(Logger::WARN, '[overlord] ' . __CLASS__, sprintf(
                         'Host group "%s" does not exist, referenced by %s',
                         $hostGroupName, $action->getClass()
                     ));
@@ -131,11 +136,11 @@ class Overlord
                 // loop over every host in this run and dispatch
                 foreach ($hostsThisRun as $host) {
                     $functionName = Gearman\Util::getFunctionName($host);
-                    $this->logger->log(Logger::NOTICE, __CLASS__, sprintf(
+                    $this->logger->log(Logger::NOTICE, '[overlord] ' . __CLASS__, sprintf(
                         'Dispatching %s to %s',
                         $action->getClass(), $host
                     ));
-                    $this->logger->log(Logger::DEBUG, __CLASS__, sprintf(
+                    $this->logger->log(Logger::DEBUG, '[overlord] ' . __CLASS__, sprintf(
                         'Sent job to function "%s", actionIndex = %d, xml is %d bytes',
                         $functionName, $actionIndex, strlen($xml)
                     ));
@@ -146,7 +151,7 @@ class Overlord
                 $client->runTasks();
 
                 if ($this->failedJobs) {
-                    $this->logger->log(Logger::ERR, __CLASS__, sprintf('%d job%s failed', $this->failedJobs, $this->failedJobs == 1 ? '' : 's'));
+                    $this->logger->log(Logger::ERR, '[overlord] ' . __CLASS__, sprintf('%d job%s failed', $this->failedJobs, $this->failedJobs == 1 ? '' : 's'));
 
                     // http://xkcd.com/292
                     goto shutdown;
@@ -155,23 +160,23 @@ class Overlord
         }
 
         shutdown:
-        $this->logger->log(Logger::NOTICE, __CLASS__, 'Overlord shutting down');
+        $this->logger->log(Logger::NOTICE, '[overlord] ' . __CLASS__, 'Overlord shutting down');
     }
 
     public function onData(\GearmanTask $task, $context)
     {
         list($priority, $tag, $message) = $this->logger->deserializeEntry($task->data());
-        $this->logger->log($priority, sprintf('%s[%s]', $tag, $context), $message);
+        $this->logger->log($priority, sprintf('[%s] %s', $context, $tag), $message, true);
     }
 
     public function onComplete(\GearmanTask $task, $context)
     {
-        $this->logger->log(Logger::INFO, sprintf('%s[%s]', __CLASS__, $context), 'Job returned success');
+        $this->logger->log(Logger::INFO, sprintf('[%s] %s', $context, __CLASS__), 'Job returned success', true);
     }
 
     public function onFail(\GearmanTask $task, $context)
     {
-        $this->logger->log(Logger::ERR, sprintf('%s[%s]', __CLASS__, $context), 'Job returned failure');
+        $this->logger->log(Logger::ERR, sprintf('[%s] %s', $context, __CLASS__), 'Job returned failure', true);
         $this->failedJobs++;
     }
 }

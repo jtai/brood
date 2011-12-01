@@ -12,6 +12,7 @@ class Logger
 
     protected $lastEntry;
     protected $logLevel;
+    protected $disabled = false;
 
     public function __construct($logLevel = self::DEBUG)
     {
@@ -24,11 +25,29 @@ class Logger
         return $this;
     }
 
-    public function log($priority, $tag, $message)
+    public function disable()
+    {
+        $this->disabled = true;
+        return $this;
+    }
+
+    public function enable()
+    {
+        $this->disabled = false;
+        return $this;
+    }
+
+    public function log($priority, $tag, $message, $force = false)
     {
         $this->lastEntry = array($priority, $tag, $message);
 
-        if ($priority <= $this->logLevel) {
+        if ($force) {
+            $print = true;
+        } else {
+            $print = !$this->disabled;
+        }
+
+        if ($print && $priority <= $this->logLevel) {
             printf("%s %s %s: %s\n", date('M d H:i:s'), $this->translatePriority($priority), $tag, $message);
         }
     }
