@@ -22,7 +22,7 @@ class Dispatcher
      */
     public static function dispatch(\GearmanJob $job, $context)
     {
-        list($actionIndex, $xml) = explode(' ', Gearman\Util::decodeWorkload($job->workload()), 2);
+        list($xml, $actionIndex) = Gearman\Util::decodeWorkload($job->workload());
 
         $logger = $context->getLogger();
 

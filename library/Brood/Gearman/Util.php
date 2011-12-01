@@ -18,7 +18,7 @@ class Util
 
     public static function encodeWorkload($workload)
     {
-        return join(' ', array(
+        return serialize(array(
             self::BROOD_PROTOCOL_MAGIC,
             self::BROOD_PROTOCOL_VERSION,
             $workload
@@ -27,7 +27,7 @@ class Util
 
     public static function decodeWorkload($encodedWorkload)
     {
-        list($magic, $version, $workload) = explode(' ', $encodedWorkload, 3);
+        list($magic, $version, $workload) = @unserialize($encodedWorkload);
 
         if ($magic != self::BROOD_PROTOCOL_MAGIC) {
             throw new \RuntimeException('Job workload does not start with brood magic marker; only cerebrates and overlords may control zerg minions');
