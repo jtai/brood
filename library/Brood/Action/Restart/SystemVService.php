@@ -29,6 +29,9 @@ class SystemVService extends AbstractAction
 
         $this->log(Logger::INFO, __CLASS__, sprintf('%s %s', ucfirst($presentParticiple), $this->service));
 
+        // disable RedHat's colorized init script output
+        putenv('BOOTUP=nocolor');
+
         $command = sprintf('/etc/init.d/%s %s 2>&1', $this->service, $verb);
         unset($output);
 
