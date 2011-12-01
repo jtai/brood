@@ -26,16 +26,13 @@ class Dispatcher
 
         $logger = $context->getLogger();
 
-        $logger->log(Logger::DEBUG, __CLASS__, sprintf('Received job, actionIndex = %d, xml is %d bytes', $actionIndex, strlen($xml)));
-        $job->sendData($logger->serializeEntry());
+        self::log(Logger::DEBUG, __CLASS__, sprintf('Received job, actionIndex = %d, xml is %d bytes', $actionIndex, strlen($xml)), $logger, $job);
 
         $config = new Config($xml);
         $actions = $config->getActions();
 
         if (!isset($actions[$actionIndex])) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('No action with index %d', $actionIndex));
-            $job->sendData($logger->serializeEntry());
-            $job->sendFail();
+            self::logFailure(Logger::ERR, __CLASS__, sprintf('No action with index %d', $actionIndex), $logger, $job);
             return;
         }
 
@@ -57,35 +54,39 @@ class Dispatcher
         try {
             $action = new $class();
         } catch (\Exception $e) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('Unable to load action class "%s": %s: %s', $class, get_class($e), $e->getMessage()));
-            $job->sendData($logger->serializeEntry());
-            $job->sendFail();
+            self::logFailure(Logger::ERR, __CLASS__, sprintf('Unable to load action class "%s": %s: %s', $class, get_class($e), $e->getMessage()), $logger, $job);
             return;
         }
 
         if (!($action instanceof Action)) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('Action class "%s" does not implement Brood\Action\Action interface', $class));
-            $job->sendData($logger->serializeEntry());
-            $job->sendFail();
+            self::logFailure(Logger::ERR, __CLASS__, sprintf('Action class "%s" does not implement Brood\Action\Action interface', $class), $logger, $job);
             return;
         }
 
         try {
             $action->setContext($job, $config, $actionIndex, $logger);
         } catch (\Exception $e) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('%s::setContext() threw an exception: %s: %s', $class, get_class($e), $e->getMessage()));
-            $job->sendData($logger->serializeEntry());
-            $job->sendFail();
+            self::logFailure(Logger::ERR, __CLASS__, sprintf('%s::setContext() threw an exception: %s: %s', $class, get_class($e), $e->getMessage()), $logger, $job);
             return;
         }
 
         try {
             return $action->execute();
         } catch (\Exception $e) {
-            $logger->log(Logger::ERR, __CLASS__, sprintf('%s::execute() threw an exception: %s: %s', $class, get_class($e), $e->getMessage()));
-            $job->sendData($logger->serializeEntry());
-            $job->sendFail();
+            self::logFailure(Logger::ERR, __CLASS__, sprintf('%s::execute() threw an exception: %s: %s', $class, get_class($e), $e->getMessage()), $logger, $job);
             return;
         }
+    }
+
+    public static function log($priority, $tag, $message, $logger, $job)
+    {
+        $logger->log($priority, $tag, $message);
+        $job->sendData(Gearman\Util::encodeData('log', array($priority, $tag, $message)));
+    }
+
+    public static function logFailure($priority, $tag, $message, $logger, $job)
+    {
+        self::log($priority, $tag, $message, $logger, $job);
+        $job->sendFail();
     }
 }

@@ -37,4 +37,17 @@ class Util
 
         return $workload;
     }
+
+    public static function encodeData($type, $data)
+    {
+        return serialize(array(
+            $type,
+            $data
+        ));
+    }
+
+    public static function decodeData($encodedData)
+    {
+        return unserialize($encodedData);
+    }
 }

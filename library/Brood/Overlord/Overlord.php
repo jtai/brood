@@ -167,8 +167,23 @@ class Overlord
 
     public function onData(\GearmanTask $task, $context)
     {
-        list($priority, $tag, $message) = $this->logger->deserializeEntry($task->data());
-        $this->logger->log($priority, sprintf('[%s] %s', $context, $tag), $message, true);
+        list($type, $data) = Gearman\Util::decodeData($task->data());
+
+        switch ($type) {
+            case 'log':
+                list($priority, $tag, $message) = $data;
+                $this->logger->log($priority, sprintf('[%s] %s', $context, $tag), $message, true);
+                break;
+
+            case 'config':
+                list($param, $value) = $data;
+                $this->config->addParameter($param, $value);
+                break;
+
+            default:
+                $this->logger->log(Logger::WARN, sprintf('[%s] %s', $context, __CLASS__), 'Job sent unknown data', true);
+                break;
+        }
     }
 
     public function onComplete(\GearmanTask $task, $context)

@@ -10,7 +10,6 @@ class Logger
     const INFO    = 6;  // Informational: informational messages
     const DEBUG   = 7;  // Debug: debug messages
 
-    protected $lastEntry;
     protected $logLevel;
     protected $disabled = false;
 
@@ -39,8 +38,6 @@ class Logger
 
     public function log($priority, $tag, $message, $force = false)
     {
-        $this->lastEntry = array($priority, $tag, $message);
-
         if ($force) {
             $print = true;
         } else {
@@ -50,20 +47,6 @@ class Logger
         if ($print && $priority <= $this->logLevel) {
             printf("%s %s %s: %s\n", date('M d H:i:s'), $this->translatePriority($priority), $tag, $message);
         }
-    }
-
-    public function serializeEntry($priority = null, $tag = null, $message = null)
-    {
-        if ($priority === null && $tag === null && $message === null) {
-            list($priority, $tag, $message) = $this->lastEntry;
-        }
-
-        return serialize(array($priority, $tag, $message));
-    }
-
-    public function deserializeEntry($serialized)
-    {
-        return unserialize($serialized);
     }
 
     protected function translatePriority($priority)

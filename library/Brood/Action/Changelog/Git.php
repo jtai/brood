@@ -22,6 +22,6 @@ class Git extends AbstractAction
 
         $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
 
-        $this->getConfig()->addParameter('changelog', join("\n", $output));
+        $this->addGlobalParameter('changelog', join("\n", $output));
     }
 }

@@ -3,7 +3,8 @@
 namespace Brood\Action;
 
 use Brood\Config\Config,
-    Brood\Log\Logger;
+    Brood\Log\Logger,
+    Brood\Gearman;
 
 abstract class AbstractAction implements Action
 {
@@ -26,15 +27,15 @@ abstract class AbstractAction implements Action
         $this->action = $actions[$actionIndex];
     }
 
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
     public function log($priority, $tag, $message)
     {
         $this->logger->log($priority, $tag, $message);
-        $this->job->sendData($this->logger->serializeEntry());
+        $this->job->sendData(Gearman\Util::encodeData('log', array($priority, $tag, $message)));
+    }
+
+    public function addGlobalParameter($param, $value)
+    {
+        $this->job->sendData(Gearman\Util::encodeData('config', array($param, $value)));
     }
 
     public function getParameter($param)
