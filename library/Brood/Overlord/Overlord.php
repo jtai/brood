@@ -39,11 +39,13 @@ class Overlord
         $client->setCompleteCallback(array($this, 'onComplete'));
         $client->setFailCallback(array($this, 'onFail'));
 
-        $xml = $this->config->getXml();
         $hostGroups = $this->config->getHostGroups();
         $aliases = $this->config->getHostAliases();
 
         foreach ($this->config->getActions() as $actionIndex => $action) {
+            // must re-fetch XML after each action; some actions may add global parameters
+            $xml = $this->config->getXml();
+
             $workload = Gearman\Util::encodeWorkload(array($xml, $actionIndex));
 
             if ($action->getOverlord()) {
