@@ -46,6 +46,7 @@ class Logger
 
         if ($print && $priority <= $this->logLevel) {
             printf("%s %s %s: %s\n", date('M d H:i:s'), $this->translatePriority($priority), $tag, $message);
+            flush();
         }
     }
 
