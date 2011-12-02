@@ -38,12 +38,21 @@ class Dispatcher
 
         $file = $actions[$actionIndex]->getFile();
         if (!empty($file)) {
-            if ($file{0} == '/') {
-                include $file;
-            } else {
+            if ($file{0} != '/') {
                 $root = dirname(dirname(dirname(__DIR__)));
-                include $root . '/' . $file;
+                $file = $root . '/' . $file;
             }
+
+            // returns canonicalized absolute pathname, or false if the file does not exist
+            $file = realpath($file);
+
+            if (!$file) {
+                self::logFailure(Logger::DEBUG, __CLASS__, sprintf('Unable to load "%s"', $file), $logger, $job);
+                return;
+            }
+
+            self::log(Logger::DEBUG, __CLASS__, sprintf('Loading "%s"', $file), $logger, $job);
+            include $file;
         }
 
         $class = $actions[$actionIndex]->getClass();
@@ -51,10 +60,15 @@ class Dispatcher
             $class = '\\' . $class;
         }
 
+        if (!class_exists($class)) {
+            self::logFailure(Logger::ERR, __CLASS__, sprintf('Action class "%s" does not exist', $class), $logger, $job);
+            return;
+        }
+
         try {
             $action = new $class();
         } catch (\Exception $e) {
-            self::logFailure(Logger::ERR, __CLASS__, sprintf('Unable to load action class "%s": %s: %s', $class, get_class($e), $e->getMessage()), $logger, $job);
+            self::logFailure(Logger::ERR, __CLASS__, sprintf('Unable to instantiate action class "%s": %s: %s', $class, get_class($e), $e->getMessage()), $logger, $job);
             return;
         }
 
