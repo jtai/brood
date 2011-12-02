@@ -27,6 +27,19 @@ abstract class AbstractAction implements Action
         $this->action = $actions[$actionIndex];
     }
 
+    /**
+     * Proxy context to another action
+     *
+     * Use this method when you want to call an action within another action
+     *
+     * @param Action $action Inner action to proxy context to
+     * @return void
+     */
+    public function proxyContext(Action $action)
+    {
+        $action->setContext($this->job, $this->config, $this->actionIndex, $this->logger);
+    }
+
     public function log($priority, $tag, $message)
     {
         $this->logger->log($priority, $tag, $message);
