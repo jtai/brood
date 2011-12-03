@@ -1,3 +1,6 @@
+What is Brood?
+==============
+
 Brood is a flexible deployment framework written in PHP. Brood leverages
 [Gearman](http://gearman.org/) to deploy to multiple servers in parallel.
 Deploys are triggered by a Gearman client, the Overlord. Most deployment tasks
