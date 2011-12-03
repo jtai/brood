@@ -134,6 +134,9 @@ The Brood config file is an XML file; the top-level element is `<brood>`.
 Connecting to Gearman
 ---------------------
 
+The Gearman configuration is used by the Overlord and Drones to determine how
+to connect to the Gearman job server.
+
 Each config file should have exactly one `<gearman>` element. A `timeout`
 attribute can be specified to set the timeout for Gearman socket I/O activity.
 Within the `<gearman>` element, there should be at least one `<server>`
@@ -141,7 +144,6 @@ element.
 
 ```xml
 <brood>
-    <!-- Gearman parameters used on both Overlord and Drones -->
     <gearman timeout="3600000">
         <server>gearmand.example.com</server>
     </gearman>
