@@ -7,15 +7,15 @@
 
     <!-- Groups of hosts, typically each group is behind a different load balancer -->
     <!-- Each host runs a Gearman worker called a Drone -->
-    <hostgroup name="web">
-        <host>www1.example.com</host>
-        <host>www2.example.com</host>
-        <host>www3.example.com</host>
-        <host>www4.example.com</host>
+    <hostgroup name="www">
+        <host alias="www1">www1.example.com</host>
+        <host alias="www2">www2.example.com</host>
+        <host alias="www3">www3.example.com</host>
+        <host alias="www4">www4.example.com</host>
     </hostgroup>
-    <hostgroup name="gearman">
-        <host>gearman1.example.com</host>
-        <host>gearman2.example.com</host>
+    <hostgroup name="static">
+        <host alias="static1">static1.example.com</host>
+        <host alias="static2">static2.example.com</host>
     </hostgroup>
 
     <!-- Actions to run, each will be run in order, serially -->
@@ -31,10 +31,10 @@
             <subject>Deployment</subject>
         </parameters>
     </action>
-    <action class="Brood\Action\Distribute\Git\Pull">
+    <action class="Brood\Action\Distribute\Git">
         <!-- Actions are run on hostgroups/hosts concurrently -->
-        <hostgroup>web</hostgroup>
-        <hostgroup>gearman</hostgroup>
+        <hostgroup>www</hostgroup>
+        <hostgroup>static</hostgroup>
         <parameters>
             <sudo>deploy</sudo>
             <directory>/var/www/exampleapp</directory>
@@ -42,10 +42,7 @@
     </action>
     <action class="Brood\Action\Restart\Apache">
         <!-- Within a hostgroup, concurrency can be specified -->
-        <!-- This example restarts the web servers one at a time -->
-        <hostgroup concurrency="1">web</hostgroup>
-    </action>
-    <action class="Brood\Action\Restart\Gearman">
-        <hostgroup>gearman</hostgroup>
+        <hostgroup concurrency="2">www</hostgroup>
+        <hostgroup concurrency="1">static</hostgroup>
     </action>
 </brood>
