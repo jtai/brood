@@ -334,14 +334,17 @@ is added to the in-memory config and is available for subsequent `Announce`
 actions.
 
 Required Parameters
+
   * `directory` - Path to git repository
   * `prev_ref` - Currently-deployed ref
   * `ref` - ref being deployed
 
 Optional Parameters
+
   * `sudo` - Run `git` as this user
 
 Parameters Added to Global Config
+
   * `changelog`
 
 Announce\Email
@@ -350,11 +353,13 @@ Announce\Email
 The `Announce\Email` action sends an e-mail announcing the deploy.
 
 Required Parameters
+
   * `to` (multiple allowed)
   * `from`
   * `subject`
 
 Optional Parameters
+
   * `user` - User that triggered the deploy
   * `message` - Short message describing the changes being deployed
   * `changelog` - List of changed files being deployed
@@ -369,10 +374,12 @@ The `Announce\NewRelic` action makes a request to [New Relic](http://newrelic.co
 API to note that a deploy occurred.
 
 Required Parameters
+
   * `api_key`
   * `app_name` or `application_id` (multiple allowed)
 
 Optional Parameters
+
   * `user` - User that triggered the deploy
   * `message` - Short message describing the changes being deployed
   * `changelog` - List of changed files being deployed
@@ -386,9 +393,11 @@ target server. The repository should already be on the right branch and have a
 default remote specified.
 
 Required Parameters
+
   * `directory` - Path to git repository
 
 Optional Parameters
+
   * `ref` - Do a `git reset --hard` to this ref, used if you want to roll back to a previous ref
   * `clean` - If this empty element is present, a `git clean -dxf` will be run to ensure the source tree only contains tracked files
   * `sudo` - Run `git` as this user
@@ -404,6 +413,7 @@ The action tries to detect the name of the init script automatically to account
 for differences between RedHat-based and Debian-based distributions.
 
 Optional Parameters
+
   * `verb` - Pass this verb to the init script, defaults to `restart`
   * `sudo` - Run init script as this user
 
@@ -415,6 +425,7 @@ end of your deploy to clear the Varnish cache or pick up new configuration
 settings.
 
 Optional Parameters
+
   * `verb` - Pass this verb to the init script, defaults to `restart`
   * `sudo` - Run init script as this user
 
