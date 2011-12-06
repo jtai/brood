@@ -18,7 +18,8 @@ to be simple and flexible, but lacking fine-grained control over parallelism
 during the deploy process. On the other hand, we found [Capistrano](http://capify.org/) to be too
 Rails-centric for our PHP applications.
 
-There are no pre-determined deployment phases in Brood. Actions simply run one
+There are no pre-determined deployment phases in Brood, nor do you specify on
+the command line which deploy tasks to be executed. Actions simply run one
 after the other as specified in the config file. When you specify that an
 action should be run, you also specify which hosts or host groups the action
 should be run on. By default, the action will be run on all hosts in parallel,
