@@ -37,26 +37,26 @@ class NewRelic extends AbstractAction
         $apikey = (string) $this->getRequiredParameter('api_key');
         $headers = array('x-api-key:' . $apikey);
 
-        $headers = array();
+        $post = array();
 
         $changelog = (string) $this->getParameter('changelog');
         if (!empty($changelog)) {
-            $headers['deployment[changelog]'] = $changelog;
+            $post['deployment[changelog]'] = $changelog;
         }
 
         $description = (string) $this->getParameter('message');
         if (!empty($description)) {
-            $headers['deployment[description]'] = $description;
+            $post['deployment[description]'] = $description;
         }
 
         $revision = (string) $this->getParameter('ref');
         if (!empty($revision)) {
-            $headers['deployment[revision]'] = $revision;
+            $post['deployment[revision]'] = $revision;
         }
 
         $user = (string) $this->getParameter('user');
         if (!empty($user)) {
-            $headers['deployment[user]'] = $user;
+            $post['deployment[user]'] = $user;
         }
 
         $notified = false;
@@ -66,7 +66,7 @@ class NewRelic extends AbstractAction
             foreach ($names as $name) {
                 $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
                 $this->doRequest($headers, array_merge($post, array('deployment[app_name]' => $name)));
-                $notification = true;
+                $notified = true;
             }
         }
 
@@ -75,7 +75,7 @@ class NewRelic extends AbstractAction
             foreach ($ids as $id) {
                 $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
                 $this->doRequest($headers, array_merge($post, array('deployment[application_id]' => $id)));
-                $notification = true;
+                $notified = true;
             }
         }
 
@@ -87,8 +87,10 @@ class NewRelic extends AbstractAction
     protected function doRequest($headers, $post)
     {
         $ch = curl_init(self::NEW_RELIC_URL);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
         curl_exec($ch);
 
