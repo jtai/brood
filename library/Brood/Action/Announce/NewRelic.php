@@ -23,43 +23,50 @@ use Brood\Action\AbstractAction,
  */
 class NewRelic extends AbstractAction
 {
-    protected $notified = 0;
+    const NEW_RELIC_URL = 'https://rpm.newrelic.com/deployments.xml';
+
+    public function __construct()
+    {
+        if (!function_exists('curl_init')) {
+            throw new \RuntimeException('cURL extension is required');
+        }
+    }
 
     public function execute()
     {
-        $args = array();
-
         $apikey = (string) $this->getRequiredParameter('api_key');
-        $args[] = sprintf('-H %s', escapeshellarg('x-api-key:' . $apikey));
+        $headers = array('x-api-key:' . $apikey);
+
+        $headers = array();
 
         $changelog = (string) $this->getParameter('changelog');
         if (!empty($changelog)) {
-            $args[] = sprintf('-d %s', escapeshellarg('deployment[changelog]=' . $changelog));
+            $headers['deployment[changelog]'] = $changelog;
         }
 
         $description = (string) $this->getParameter('message');
         if (!empty($description)) {
-            $args[] = sprintf('-d %s', escapeshellarg('deployment[description]=' . $description));
+            $headers['deployment[description]'] = $description;
         }
 
         $revision = (string) $this->getParameter('ref');
         if (!empty($revision)) {
-            $args[] = sprintf('-d %s', escapeshellarg('deployment[revision]=' . $revision));
+            $headers['deployment[revision]'] = $revision;
         }
 
         $user = (string) $this->getParameter('user');
         if (!empty($user)) {
-            $args[] = sprintf('-d %s', escapeshellarg('deployment[user]=' . $user));
+            $headers['deployment[user]'] = $user;
         }
+
+        $notified = false;
 
         $names = $this->getParameter('app_name');
         if (isset($names[0])) {
             foreach ($names as $name) {
                 $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
-
-                $this->doRequest(array_merge($args, array(
-                    sprintf('-d %s', escapeshellarg('deployment[app_name]=' . $name))
-                )));
+                $this->doRequest(array_merge($headers, array('deployment[app_name]' => $name)));
+                $notification = true;
             }
         }
 
@@ -67,25 +74,28 @@ class NewRelic extends AbstractAction
         if (isset($ids[0])) {
             foreach ($ids as $id) {
                 $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
-
-                $this->doRequest(array_merge($args, array(
-                    sprintf('-d %s', escapeshellarg('deployment[application_id]=' . $id))
-                )));
+                $this->doRequest(array_merge($headers, array('deployment[application_id]' => $id)));
+                $notification = true;
             }
         }
 
-        if (!$this->notified) {
+        if (!$notified) {
             throw new \RuntimeException(sprintf('"app_name" or "application_id" configuration parameter is required by %s', get_class($this)));
         }
     }
 
-    protected function doRequest($args)
+    protected function doRequest($headers, $post)
     {
-        $command = 'curl -s ' . join(' ', $args) . ' https://rpm.newrelic.com/deployments.xml';
-        unset($output);
+        $ch = curl_init(self::NEW_RELIC_URL);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_exec($ch);
 
-        $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
+        if (curl_errno($ch)) {
+            $this->log(Logger::WARN, __CLASS__, sprintf('%s (error %d)', curl_error($ch), curl_errno($ch)));
+        }
 
-        $this->notified++;
+        curl_close($ch);
     }
 }
