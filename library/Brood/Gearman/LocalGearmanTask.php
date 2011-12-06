@@ -1,7 +1,23 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Gearman
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Gearman;
 
+/**
+ * Gearman task for use with LocalGearmanJob
+ *
+ * @category   Brood
+ * @package    Brood_Gearman
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class LocalGearmanTask extends \GearmanTask
 {
     protected $data;

@@ -1,7 +1,23 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Config
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Config;
 
+/**
+ * Class representing a hostgroup element
+ *
+ * @category   Brood
+ * @package    Brood_Config
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class HostGroup
 {
     protected $xml;

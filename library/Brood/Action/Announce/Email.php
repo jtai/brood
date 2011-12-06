@@ -1,10 +1,26 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Action\Announce;
 
 use Brood\Action\AbstractAction,
     Brood\Log\Logger;
 
+/**
+ * Send an e-mail announcing the deploy
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Email extends AbstractAction
 {
     public function execute()

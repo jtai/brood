@@ -1,7 +1,23 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Log
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Log;
 
+/**
+ * Logger
+ *
+ * @category   Brood
+ * @package    Brood_Log
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Logger
 {
     const ERR     = 3;  // Error: error conditions

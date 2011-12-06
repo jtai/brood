@@ -1,9 +1,25 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Overlord
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Overlord;
 
 use Brood\Log\Logger;
 
+/**
+ * Parse Overlord command-line options
+ *
+ * @category   Brood
+ * @package    Brood_Overlord
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Options
 {
     protected $options;

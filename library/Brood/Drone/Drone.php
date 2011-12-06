@@ -1,4 +1,12 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Drone
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Drone;
 
@@ -6,6 +14,18 @@ use Brood\Config\Config,
     Brood\Gearman,
     Brood\Log\Logger as Logger;
 
+/**
+ * Perform actions
+ *
+ * The Drone connects to the Gearman job server and waits for instructions from
+ * the Overlord. When the Drone receives an action from the Overlord, it
+ * performs the action and exits.
+ *
+ * @category   Brood
+ * @package    Brood_Drone
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Drone
 {
     protected $config;

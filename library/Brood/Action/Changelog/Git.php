@@ -1,10 +1,30 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Action\Changelog;
 
 use Brood\Action\AbstractAction,
     Brood\Log\Logger;
 
+/**
+ * Generate a summary of changed files
+ *
+ * This action uses `git diff` to generate a summary of changed files from the
+ * currently-deployed ref and the ref being deployed. The changelog is added to
+ * the in-memory config and is available for subsequent Announce actions.
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Git extends AbstractAction
 {
     public function execute()

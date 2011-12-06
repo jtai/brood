@@ -1,4 +1,12 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Action;
 
@@ -6,6 +14,18 @@ use Brood\Config\Config,
     Brood\Log\Logger,
     Brood\Gearman;
 
+/**
+ * Abstract action class
+ *
+ * Provides an implementation of setContext(), along with other helper methods.
+ * Action class authors are encouraged to extend this class instead of
+ * implementing the interface directly.
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 abstract class AbstractAction implements Action
 {
     private $job;

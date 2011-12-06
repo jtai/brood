@@ -1,10 +1,31 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Gearman
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Gearman;
 
+/**
+ * Static utility methods
+ *
+ * @category   Brood
+ * @package    Brood_Gearman
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Util
 {
     const BROOD_PROTOCOL_MAGIC = 'brood';
+
+    /**
+     * Increment this number if the over-the-wire workload or data format changes
+     * @var int
+     */
     const BROOD_PROTOCOL_VERSION = 1;
 
     public static function getFunctionName($host)

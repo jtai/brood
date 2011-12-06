@@ -1,14 +1,27 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Gearman
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Gearman;
 
 /**
  * Gearman job that we dispatch ourselves
  *
- * Normal GearmanJobs are created by gearman. This class allows us to set up a
+ * Normal GearmanJobs are created by Gearman. This class allows us to set up a
  * job, run dispatch it ourselves, then trigger callbacks that are expecting a
- * GearmanTask. All of this happens without actually contacting a gearman
+ * GearmanTask. All of this happens without actually contacting a Gearman job
  * server.
+ *
+ * @category   Brood
+ * @package    Brood_Gearman
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
  */
 class LocalGearmanJob extends \GearmanJob
 {

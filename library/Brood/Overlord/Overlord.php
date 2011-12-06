@@ -1,4 +1,12 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Overlord
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Overlord;
 
@@ -7,6 +15,17 @@ use Brood\Config\Config,
     Brood\Action\Dispatcher,
     Brood\Log\Logger;
 
+/**
+ * Coordinate deployment
+ *
+ * The Overlord instructs Drones to perform the actions specified in the config
+ * by sending jobs to the Gearman job server.
+ *
+ * @category   Brood
+ * @package    Brood_Overlord
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Overlord
 {
     protected $config;

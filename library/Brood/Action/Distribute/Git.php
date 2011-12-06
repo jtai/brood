@@ -1,10 +1,29 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Action\Distribute;
 
 use Brood\Action\AbstractAction,
     Brood\Log\Logger;
 
+/**
+ * Update a git repository
+ *
+ * This action does a `git pull` to update the repository. The repository
+ * should already be on the right branch and have a default remote specified.
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Git extends AbstractAction
 {
     public function execute()

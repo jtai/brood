@@ -1,4 +1,12 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Action;
 
@@ -6,15 +14,28 @@ use Brood\Gearman,
     Brood\Config\Config,
     Brood\Log\Logger as Logger;
 
+/**
+ * Action dispatcher
+ *
+ * Provides a callback for GearmanWorker::addFunction(). The callback attempts
+ * to load and instantiate the action class specified by the Overlord, call
+ * setContext() on it, then call execute() on it.
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 class Dispatcher
 {
     /**
      * Callback for GearmanWorker::addFunction()
      *
-     * A Gearman worker calls this method when a job arrives. We get the Brood
-     * config as the context argument; this is set up by the worker before a
-     * job arrives. Using the information in the job workload, we figure out
-     * what class we need to instantiate, then call the class' execute() method.
+     * A Gearman worker calls this method when a job arrives. We get the Drone
+     * or Overlord object as the context argument; this is set up by the worker
+     * before a job arrives. Using the information in the job workload, we
+     * figure out what class we need to instantiate, then call the class'
+     * setContext() and execute() methods.
      *
      * @param GearmanJob $job
      * @param Brood\Overlord\Overlord|Brood\Drone\Drone $context

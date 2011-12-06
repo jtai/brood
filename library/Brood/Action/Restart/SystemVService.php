@@ -1,11 +1,29 @@
 <?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
 
 namespace Brood\Action\Restart;
 
 use Brood\Action\AbstractAction,
     Brood\Log\Logger;
 
-class SystemVService extends AbstractAction
+/**
+ * Abstract action class for actions that restart a SystemV service
+ *
+ * Most implementing classes should only need to specify a value for $service.
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
+abstract class SystemVService extends AbstractAction
 {
     /**
      * Name of the script in /etc/init.d to invoke
