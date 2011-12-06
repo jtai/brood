@@ -65,7 +65,7 @@ class NewRelic extends AbstractAction
         if (isset($names[0])) {
             foreach ($names as $name) {
                 $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
-                $this->doRequest(array_merge($headers, array('deployment[app_name]' => $name)));
+                $this->doRequest($headers, array_merge($post, array('deployment[app_name]' => $name)));
                 $notification = true;
             }
         }
@@ -74,7 +74,7 @@ class NewRelic extends AbstractAction
         if (isset($ids[0])) {
             foreach ($ids as $id) {
                 $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification to New Relic application "%s"', $name));
-                $this->doRequest(array_merge($headers, array('deployment[application_id]' => $id)));
+                $this->doRequest($headers, array_merge($post, array('deployment[application_id]' => $id)));
                 $notification = true;
             }
         }
