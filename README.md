@@ -52,6 +52,8 @@ Brood tries to autodetect the user triggering the deploy by calling
 `posix_getlogin()` from the POSIX PHP extension. You can bypass this call by
 explicitly passing the user to the Overlord with the `-u` option.
 
+The `Announce\NewRelic` action requires the cURL PHP extension.
+
 
 Installation
 ============
