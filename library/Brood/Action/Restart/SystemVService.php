@@ -50,7 +50,7 @@ abstract class SystemVService extends AbstractAction
         // disable RedHat's colorized init script output
         putenv('BOOTUP=nocolor');
 
-        $command = sprintf('/etc/init.d/%s %s 2>&1', $this->service, $verb);
+        $command = sprintf('/etc/init.d/%s %s 2>&1', escapeshellarg($this->service), escapeshellarg($verb));
         unset($output);
 
         $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
