@@ -111,6 +111,8 @@ class Dispatcher
             self::logFailure(Logger::ERR, __CLASS__, sprintf('%s::execute() threw an exception: %s: %s', $class, get_class($e), $e->getMessage()), $logger, $job);
             return;
         }
+
+        $job->sendComplete('');
     }
 
     public static function log($priority, $tag, $message, $logger, $job)
