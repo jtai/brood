@@ -68,6 +68,9 @@ class Drone
         // don't loop -- exit after every job and let supervisord restart us
         $worker->work();
 
+        // pause a bit to ensure job status gets sent to gearmand
+        sleep(0.1);
+
         switch ($worker->returnCode()) {
             case \GEARMAN_SUCCESS:
                 // will get here even if job returns failure

@@ -112,7 +112,7 @@ class Dispatcher
             return;
         }
 
-        $job->sendComplete('');
+        return '';
     }
 
     public static function log($priority, $tag, $message, $logger, $job)
