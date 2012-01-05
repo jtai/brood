@@ -69,7 +69,7 @@ class Drone
         $worker->work();
 
         // pause a bit to ensure job status gets sent to gearmand
-        sleep(0.1);
+        sleep(1);
 
         switch ($worker->returnCode()) {
             case \GEARMAN_SUCCESS:
