@@ -93,4 +93,10 @@ class Config
 
         $this->xml->parameters[0]->addChild($param, $value);
     }
+
+    public function setParameter($param, $value)
+    {
+        unset($this->xml->parameters[0]->$param);
+        $this->addParameter($param, $value);
+    }
 }

@@ -68,7 +68,12 @@ abstract class AbstractAction implements Action
 
     public function addGlobalParameter($param, $value)
     {
-        $this->job->sendData(Gearman\Util::encodeData('config', array($param, $value)));
+        $this->job->sendData(Gearman\Util::encodeData('addConfig', array($param, $value)));
+    }
+
+    public function setGlobalParameter($param, $value)
+    {
+        $this->job->sendData(Gearman\Util::encodeData('setConfig', array($param, $value)));
     }
 
     public function getParameter($param)

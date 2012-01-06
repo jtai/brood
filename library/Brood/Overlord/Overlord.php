@@ -194,9 +194,14 @@ class Overlord
                 $this->logger->log($priority, sprintf('[%s] %s', $context, $tag), $message, true);
                 break;
 
-            case 'config':
+            case 'addConfig':
                 list($param, $value) = $data;
                 $this->config->addParameter($param, $value);
+                break;
+
+            case 'setConfig':
+                list($param, $value) = $data;
+                $this->config->setParameter($param, $value);
                 break;
 
             default:

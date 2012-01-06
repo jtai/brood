@@ -33,6 +33,10 @@ class Git extends AbstractAction
 
         $this->log(Logger::INFO, __CLASS__, 'Generating changelog');
 
+        if ($this->getRequiredParameter('prev_ref') == $this->getRequiredParameter('ref')) {
+            $this->setGlobalParameter('changelog', '');
+        }
+
         $command = sprintf(
             'git diff --stat=120,100 %s %s',
             escapeshellarg($this->getRequiredParameter('prev_ref')),
@@ -52,6 +56,6 @@ class Git extends AbstractAction
             );
         }
 
-        $this->addGlobalParameter('changelog', join("\n", $output));
+        $this->setGlobalParameter('changelog', join("\n", $output));
     }
 }
