@@ -35,15 +35,6 @@ class Email extends AbstractAction
             $this->getParameter('changelog')
         );
 
-        $diffUrl = (string) $this->getParameter('diff_url');
-        if (!empty($diffUrl)) {
-            $message .= sprintf(
-                "\n\n" . $diffUrl,
-                substr($this->getParameter('prev_ref'), 0, 16),
-                substr($this->getParameter('ref'), 0, 16)
-            );
-        }
-
         $headers = join("\r\n", array(
             'From: ' . $from,
         ));

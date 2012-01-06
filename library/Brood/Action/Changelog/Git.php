@@ -42,6 +42,16 @@ class Git extends AbstractAction
 
         $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
 
+        $diffUrl = (string) $this->getParameter('diff_url');
+        if (!empty($diffUrl)) {
+            $output .= "\n\n";
+            $output .= sprintf(
+                $diffUrl,
+                substr($this->getRequiredParameter('prev_ref'), 0, 16),
+                substr($this->getRequiredParameter('ref'), 0, 16)
+            );
+        }
+
         $this->addGlobalParameter('changelog', join("\n", $output));
     }
 }

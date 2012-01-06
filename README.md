@@ -344,6 +344,7 @@ Required Parameters
 
 Optional Parameters
 
+  * `diff_url` - `sprintf()`-formatted URL that links to a diff of the changes being deployed, e.g., `https://github.com/user/project/compare/%s...%s`
   * `sudo` - Run `git` as this user
 
 Parameters Added to Global Config
@@ -366,9 +367,6 @@ Optional Parameters
   * `user` - User that triggered the deploy
   * `message` - Short message describing the changes being deployed
   * `changelog` - List of changed files being deployed
-  * `diff_url` - `sprintf()`-formatted URL that links to a diff of the changes being deployed, e.g., `https://github.com/user/project/compare/%s...%s`
-  * `prev_ref` - Currently-deployed ref
-  * `ref` - ref being deployed
 
 Announce\NewRelic
 -----------------
