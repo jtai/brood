@@ -28,12 +28,28 @@ class Email extends AbstractAction
         $from    = (string) $this->getRequiredParameter('from');
         $subject = (string) $this->getRequiredParameter('subject');
 
-        $message = sprintf(
-            "User: %s\n\n%s\n\nChanged Files:\n%s",
-            $this->getParameter('user'),
-            $this->getParameter('message'),
-            $this->getParameter('changelog')
-        );
+        $body = array();
+
+        $user = (string) $this->getParameter('user');
+        if (!empty($user)) {
+            $body[] = sprintf('User: %s', $user);
+        }
+
+        $message = (string) $this->getParameter('message');
+        if (!empty($message)) {
+            $body[] = $message;
+        }
+
+        $changelog = (string) $this->getParameter('changelog');
+        if (!empty($changelog)) {
+            $body[] = sprintf("Changed Files:\n%s", $changelog);
+        }
+
+        if ($this->getParameter('skip_if_no_changes') && empty($changelog)) {
+            return;
+        }
+
+        $body = join("\n\n", $body);
 
         $headers = join("\r\n", array(
             'From: ' . $from,
@@ -45,7 +61,7 @@ class Email extends AbstractAction
         foreach ($this->getRequiredParameter('to') as $to) {
             $this->log(Logger::INFO, __CLASS__, sprintf('Sending notification email to %s', $to));
 
-            mail($to, $subject, $message, $headers, $params);
+            mail($to, $subject, $body, $headers, $params);
         }
     }
 }

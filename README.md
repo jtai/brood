@@ -367,6 +367,7 @@ Optional Parameters
   * `user` - User that triggered the deploy
   * `message` - Short message describing the changes being deployed
   * `changelog` - List of changed files being deployed
+  * `skip_if_no_changes` - If the changelog parameter is empty, don't send the e-mail
 
 Announce\NewRelic
 -----------------
