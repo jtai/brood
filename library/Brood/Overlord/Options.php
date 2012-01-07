@@ -27,7 +27,7 @@ class Options
     protected function parse()
     {
         if ($this->options === null) {
-            $this->options = getopt('c:hl:m:o:p:r:u:', array('config:', 'help', 'log-level:', 'message:', 'log-file:', 'prev-ref:', 'ref:', 'user:'));
+            $this->options = getopt('c:hl:m:o:r:u:', array('config:', 'help', 'log-level:', 'message:', 'log-file:', 'ref:', 'user:'));
         }
 
         return $this->options;
@@ -65,7 +65,6 @@ OPTIONS
   -l, --log-level  log level for stdout, one of: ERR, WARN, NOTICE, INFO, or DEBUG, defaults to INFO
   -m, --message    deploy message, primarily used by announce actions
   -o, --log-file   write DEBUG output to specified log file
-  -p, --prev-ref   previous ref, primarily used by announce actions to link to diffs
   -r, --ref        ref to deploy, defaults to HEAD
   -u, --user       user performing deploy, primarily used by announce actions
 
@@ -111,19 +110,6 @@ EOF;
 
         if (isset($options['o'])) {
             return $options['o'];
-        }
-    }
-
-    public function getPrevRef()
-    {
-        $options = $this->parse();
-
-        if (isset($options['prev-ref'])) {
-            return $options['prev-ref'];
-        }
-
-        if (isset($options['p'])) {
-            return $options['p'];
         }
     }
 
