@@ -30,6 +30,14 @@ class Git extends AbstractAction
     {
         $this->chdir($this->getRequiredParameter('directory'));
 
+        // Detect currently-deployed ref
+        $command = 'git rev-parse HEAD';
+        unset($output);
+
+        $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
+
+        $this->setGlobalParameter('prev_ref', trim($output[0]));
+
         $this->log(Logger::INFO, __CLASS__, 'Performing git pull');
 
         // Use --ff-only to ensure that we don't have any local commits that aren't
@@ -50,6 +58,16 @@ class Git extends AbstractAction
             unset($output);
 
             $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
+
+            $this->setGlobalParameter('ref', $ref);
+        } else {
+            // Detect ref
+            $command = 'git rev-parse HEAD';
+            unset($output);
+
+            $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
+
+            $this->setGlobalParameter('ref', trim($output[0]));
         }
 
         // If the clean parameter is present, clean up any build artifacts or temp files.

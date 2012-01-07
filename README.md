@@ -404,6 +404,11 @@ Optional Parameters
   * `clean` - If this empty element is present, a `git clean -dxf` will be run to ensure the source tree only contains tracked files
   * `sudo` - Run `git` as this user
 
+Parameters Added to Global Config
+
+  * `prev_ref`
+  * `ref`
+
 Restart\Apache
 --------------
 
