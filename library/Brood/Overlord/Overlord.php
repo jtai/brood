@@ -61,6 +61,8 @@ class Overlord
         $hostGroups = $this->config->getHostGroups();
         $aliases = $this->config->getHostAliases();
 
+        $success = true;
+
         foreach ($this->config->getActions() as $actionIndex => $action) {
             // must re-fetch XML after each action; some actions may add global parameters
             $xml = $this->config->getXml();
@@ -174,6 +176,8 @@ class Overlord
                 if ($this->failedJobs) {
                     $this->logger->log(Logger::ERR, '[overlord] ' . __CLASS__, sprintf('%d job%s failed', $this->failedJobs, $this->failedJobs == 1 ? '' : 's'));
 
+                    $success = false;
+
                     // http://xkcd.com/292
                     goto shutdown;
                 }
@@ -182,6 +186,8 @@ class Overlord
 
         shutdown:
         $this->logger->log(Logger::NOTICE, '[overlord] ' . __CLASS__, 'Overlord shutting down');
+
+        return $success;
     }
 
     public function onData(\GearmanTask $task, $context)

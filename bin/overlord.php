@@ -31,5 +31,5 @@ if ($options->getUser()) {
 }
 
 $overlord = new \Brood\Overlord\Overlord($config, $options->getLogLevel());
-$overlord->run();
+exit($overlord->run() ? 0 : 1);
 

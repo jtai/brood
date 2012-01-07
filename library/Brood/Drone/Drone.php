@@ -75,14 +75,17 @@ class Drone
             case \GEARMAN_SUCCESS:
                 // will get here even if job returns failure
                 $this->logger->log(Logger::NOTICE, __CLASS__, 'Drone shutting down, job finished');
+                return true;
                 break;
 
             case \GEARMAN_TIMEOUT:
                 $this->logger->log(Logger::NOTICE, __CLASS__, 'Drone shutting down, timed out waiting for job');
+                return true;
                 break;
 
             default:
                 $this->logger->log(Logger::ERR, __CLASS__, $worker->error());
+                return false;
                 break;
         }
     }

@@ -25,5 +25,5 @@ if ($options->getHostname()) {
 }
 
 $drone = new \Brood\Drone\Drone($config, $options->getLogLevel());
-$drone->run();
+exit($drone->run() ? 0 : 1);
 
