@@ -45,7 +45,8 @@ class Email extends AbstractAction
             $body[] = sprintf("Changed Files:\n%s", $changelog);
         }
 
-        if ($this->getParameter('skip_if_no_changes') && empty($changelog)) {
+        $skip = $this->getParameter('skip_if_no_changes');
+        if (isset($skip[0]) && empty($changelog)) {
             return;
         }
 
