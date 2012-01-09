@@ -321,7 +321,7 @@ A small number of actions are distributed with Brood. If you write
 generally-applicable actions (see the Writing Custom Actions section below),
 please contribute them to the project!
 
-HellowWorld
+HelloWorld
 -----------
 
 The `HelloWorld` action simply logs an informational message: "Hello world!".
@@ -423,6 +423,22 @@ Optional Parameters
 
   * `verb` - Pass this verb to the init script, defaults to `restart`
   * `sudo` - Run init script as this user
+
+Restart\SupervisordService
+---------------
+
+The `Restart\SupervisordService` action restarts a service controlled by [Supervisor](http://supervisord.org/).
+You may want to do this at the end of your deploy to restart long-running
+scripts.
+
+Optional Parameters
+
+  * `configuration` - Path to supervisorctl configuration file
+  * `serverurl` - Server URL supervisorctl should connect to
+  * `username` - Username supervisorctl should use
+  * `password` - Password supervisorctl should use
+  * `verb` - Pass this verb to the init script, defaults to `restart`
+  * `sudo` - Run supervisorctl as this user
 
 Restart\Varnish
 ---------------
