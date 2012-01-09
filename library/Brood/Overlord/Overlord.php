@@ -101,6 +101,8 @@ class Overlord
             }
 
             if ($this->failedJobs) {
+                $this->logger->log(Logger::ERR, '[overlord] ' . __CLASS__, '1 job failed');
+                $success = false;
                 break;
             }
 
@@ -175,18 +177,14 @@ class Overlord
 
                 if ($this->failedJobs) {
                     $this->logger->log(Logger::ERR, '[overlord] ' . __CLASS__, sprintf('%d job%s failed', $this->failedJobs, $this->failedJobs == 1 ? '' : 's'));
-
                     $success = false;
-
-                    // http://xkcd.com/292
-                    goto shutdown;
+                    goto shutdown; // http://xkcd.com/292
                 }
             }
         }
 
         shutdown:
         $this->logger->log(Logger::NOTICE, '[overlord] ' . __CLASS__, 'Overlord shutting down');
-
         return $success;
     }
 
