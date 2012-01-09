@@ -437,7 +437,7 @@ Optional Parameters
   * `serverurl` - Server URL `supervisorctl` should connect to
   * `username` - Username `supervisorctl` should use
   * `password` - Password `supervisorctl` should use
-  * `verb` - Pass this verb to the init script, defaults to `restart`
+  * `verb` - Pass this verb to `supervisorctl`, defaults to `restart`
   * `sudo` - Run `supervisorctl` as this user
 
 Restart\Varnish
