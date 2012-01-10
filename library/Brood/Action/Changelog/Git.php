@@ -33,7 +33,7 @@ class Git extends AbstractAction
 
         $this->log(Logger::INFO, __CLASS__, 'Generating changelog');
 
-        if ($this->getRequiredParameter('prev_ref') == $this->getRequiredParameter('ref')) {
+        if ((string) $this->getRequiredParameter('prev_ref') == (string) $this->getRequiredParameter('ref')) {
             $this->setGlobalParameter('changelog', '');
             return;
         }
