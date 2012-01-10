@@ -35,6 +35,7 @@ class Git extends AbstractAction
 
         if ($this->getRequiredParameter('prev_ref') == $this->getRequiredParameter('ref')) {
             $this->setGlobalParameter('changelog', '');
+            return;
         }
 
         $command = sprintf(
@@ -48,9 +49,8 @@ class Git extends AbstractAction
 
         $diffUrl = (string) $this->getParameter('diff_url');
         if (!empty($diffUrl)) {
-            $output .= "\n\n";
-            $output .= sprintf(
-                $diffUrl,
+            $output[] = sprintf(
+                "\n" . $diffUrl,
                 substr($this->getRequiredParameter('prev_ref'), 0, 16),
                 substr($this->getRequiredParameter('ref'), 0, 16)
             );
