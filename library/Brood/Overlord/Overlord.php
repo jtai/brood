@@ -155,7 +155,7 @@ class Overlord
                     }
 
                     // if this queue is now empty, remove it entirely
-                    if (empty($hosts)) {
+                    if (empty($queues[$hostGroupName])) {
                         unset($queues[$hostGroupName]);
                     }
                 }
