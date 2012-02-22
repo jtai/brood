@@ -128,6 +128,8 @@ class Overlord
                 $concurrency[$hostGroupName] = (int) $hostGroupInfo['concurrency'];
             }
 
+            // put hosts not associated with any hostgroup into a queue with no concurrency
+            // limit so the code below doesn't have to handle these hosts as a special case
             foreach (array_keys($action->getHosts()) as $host) {
                 $queues[''][] = $host;
             }
