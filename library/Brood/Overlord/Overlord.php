@@ -124,6 +124,11 @@ class Overlord
                 $hostGroup = $hostGroups[$hostGroupName];
                 foreach (array_keys($hostGroup->getHosts()) as $host) {
                     $queues[$hostGroupName][] = $host;
+
+                    // pad this hostgroup queue with empty entries if requested
+                    for ($i = 0; $i < (int) $hostGroupInfo['padding']; $i++) {
+                        $queues[$hostGroupName][] = false;
+                    }
                 }
                 $concurrency[$hostGroupName] = (int) $hostGroupInfo['concurrency'];
             }
@@ -144,7 +149,10 @@ class Overlord
 
                     foreach ($hosts as $i => $host) {
                         // dequeue a host
-                        $hostsThisRun[] = $host;
+                        if ($host !== false) {
+                            // do not add padding entries to $hostsThisRun list
+                            $hostsThisRun[] = $host;
+                        }
                         unset($queues[$hostGroupName][$i]);
 
                         // make sure we don't go over our concurrency limit
