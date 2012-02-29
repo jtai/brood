@@ -70,6 +70,21 @@ class Git extends AbstractAction
             $this->setGlobalParameter('ref', trim($output[0]));
         }
 
+        // Detect if there are submodules, if so, update
+        $command = 'git submodule status';
+        unset($output);
+
+        $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
+
+        if ($output) {
+            $this->log(Logger::INFO, __CLASS__, 'Performing git submodule update --init --recursive');
+
+            $command = 'git submodule update --init --recursive';
+            unset($output);
+
+            $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
+        }
+
         // If the clean parameter is present, clean up any build artifacts or temp files.
         $clean = $this->getParameter('clean');
         if (isset($clean[0])) {
