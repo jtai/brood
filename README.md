@@ -377,7 +377,7 @@ API to note that a deploy occurred.
 
 Required Parameters
 
-  * `api_key`
+  * `api_key` or `api_key_file`
   * `app_name` or `application_id` (multiple allowed)
 
 Optional Parameters

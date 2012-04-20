@@ -34,8 +34,23 @@ class NewRelic extends AbstractAction
 
     public function execute()
     {
-        $apikey = (string) $this->getRequiredParameter('api_key');
-        $headers = array('x-api-key:' . $apikey);
+        $api_key = (string) $this->getParameter('api_key');
+
+        if ($api_key == '') {
+            $api_key_file = (string) $this->getParameter('api_key_file');
+
+            if ($api_key_file == '') {
+                throw new \RuntimeException(sprintf('"api_key" or "api_key_file" configuration parameter is required by %s', get_class($this)));
+            }
+
+            if (!file_exists($api_key_file)) {
+                throw new \RuntimeException(sprintf('api_key_file "%s" does not exist', $api_key_file));
+            }
+
+            $api_key = trim(file_get_contents($api_key_file));
+        }
+
+        $headers = array('x-api-key:' . $api_key);
 
         $post = array();
 
