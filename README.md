@@ -268,6 +268,23 @@ will be restarted on www3, www4, and static2 in parallel.
 </brood>
 ```
 
+If you have a hostgroup with many hosts and another hostgroup with only a few
+hosts, you may want to space out the actions on the smaller hostgroup. For
+example, if you have 8 hosts in the www hostgroup, but only 2 hosts in the
+static hostgroup, you may want to run an action on www1, www2, and static1,
+then www3 and www4, then www5, www6, static2, and finally www7 and www8. By
+default, the action would have been run on static2 at the same time as www3 and
+www4. To leave a placeholder, specify the `padding` attribute.
+
+```xml
+<brood>
+    <action class="Brood\Action\Restart\Apache">
+        <hostgroup concurrency="2">www</hostgroup>
+        <hostgroup concurrency="1" padding="1">static</hostgroup>
+    </action>
+</brood>
+```
+
 You can also specify that an action be run on individual hosts by adding
 `<host>` elements to an `<action>` element. The action will be run on these
 hosts in parallel along with any hosts specified by group.
