@@ -30,7 +30,7 @@ class Overlord
 {
     protected $config;
     protected $logger;
-    protected $failedJobs = 0;
+    protected $failedHosts = array();
 
     public function __construct(Config $config, $logLevel = Logger::INFO)
     {
@@ -100,8 +100,9 @@ class Overlord
                 $this->logger->enable();
             }
 
-            if ($this->failedJobs) {
+            if (!empty($this->failedHosts)) {
                 $this->logger->log(Logger::ERR, '[overlord] ' . __CLASS__, '1 job failed');
+                $this->logger->log(Logger::DEBUG, '[overlord] ' . __CLASS__, 'Job failed on host overlord.local');
                 $success = false;
                 break;
             }
@@ -185,8 +186,14 @@ class Overlord
                 // blocks until tasks finish
                 $client->runTasks();
 
-                if ($this->failedJobs) {
-                    $this->logger->log(Logger::ERR, '[overlord] ' . __CLASS__, sprintf('%d job%s failed', $this->failedJobs, $this->failedJobs == 1 ? '' : 's'));
+                if (!empty($this->failedHosts)) {
+                    $count = count($this->failedHosts);
+                    $plural = $count == 1 ? '' : 's';
+                    $this->logger->log(Logger::ERR, '[overlord] ' . __CLASS__, sprintf('%d job%s failed', $count, $plural));
+                    $this->logger->log(Logger::DEBUG, '[overlord] ' . __CLASS__, sprintf(
+                        '%d job%s failed on host%s %s',
+                        $count, $plural, $plural, join(', ', $this->failedHosts)
+                    ));
                     $success = false;
                     goto shutdown; // http://xkcd.com/292
                 }
@@ -232,6 +239,6 @@ class Overlord
     public function onFail(\GearmanTask $task, $context)
     {
         $this->logger->log(Logger::ERR, sprintf('[%s] %s', $context, __CLASS__), 'Job returned failure', true);
-        $this->failedJobs++;
+        $this->failedHosts[] = $context;
     }
 }
