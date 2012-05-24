@@ -30,6 +30,8 @@ class Overlord
 {
     protected $config;
     protected $logger;
+    protected $dispatchedHosts = array();
+    protected $completedHosts = array();
     protected $failedHosts = array();
 
     public function __construct(Config $config, $logLevel = Logger::INFO)
@@ -143,6 +145,8 @@ class Overlord
 
             while (!empty($queues)) {
                 $hostsThisRun = array();
+                $this->dispatchedHosts = array();
+                $this->completedHosts = array();
 
                 // loop over every queue and dequeue a few hosts for this run
                 foreach ($queues as $hostGroupName => $hosts) {
@@ -180,7 +184,9 @@ class Overlord
                         'Sent job to function "%s", actionIndex = %d, xml is %d bytes',
                         $functionName, $actionIndex, strlen($xml)
                     ));
-                    $client->addTask($functionName, $workload, isset($aliases[$host]) ? $aliases[$host] : $host);
+                    $alias = isset($aliases[$host]) ? $aliases[$host] : $host;
+                    $this->dispatchedHosts[] = $alias;
+                    $client->addTask($functionName, $workload, $alias);
                 }
 
                 // blocks until tasks finish
@@ -234,6 +240,17 @@ class Overlord
     public function onComplete(\GearmanTask $task, $context)
     {
         $this->logger->log(Logger::INFO, sprintf('[%s] %s', $context, __CLASS__), 'Job returned success', true);
+        $this->completedHosts[] = $context;
+
+        $remainingHosts = array_diff($this->dispatchedHosts, $this->completedHosts);
+        if (!empty($remainingHosts)) {
+            $count = count($remainingHosts);
+            $plural = $count == 1 ? '' : 's';
+            $this->logger->log(Logger::DEBUG, '[overlord] ' . __CLASS__, sprintf(
+                '%d job%s still pending on host%s %s',
+                $count, $plural, $plural, join(', ', $remainingHosts)
+            ));
+        }
     }
 
     public function onFail(\GearmanTask $task, $context)
