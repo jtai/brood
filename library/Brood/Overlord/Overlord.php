@@ -90,7 +90,7 @@ class Overlord
                 $job->setCompleteCallback(array($this, 'onComplete'));
                 $job->setFailCallback(array($this, 'onFail'));
 
-                // disable direect printing of log messages; messages will be
+                // disable direct printing of log messages; messages will be
                 // logged via the onData callback
                 $this->logger->disable();
 
@@ -148,9 +148,9 @@ class Overlord
                     $added = 0;
 
                     foreach ($hosts as $i => $host) {
-                        // dequeue a host
+                        // dequeue a host by adding it to the $hostsThisRun list and removing it from the queue
+                        // do not add padding entries (entries where value === false) to $hostsThisRun list
                         if ($host !== false) {
-                            // do not add padding entries to $hostsThisRun list
                             $hostsThisRun[] = $host;
                         }
                         unset($queues[$hostGroupName][$i]);
