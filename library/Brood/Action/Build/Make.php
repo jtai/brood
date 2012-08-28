@@ -16,8 +16,8 @@ use Brood\Action\AbstractAction,
 /**
  * Run make with specified targets.
  *
- * The targets configuration should simply be a space-separated
- * list of the targets that should be passed to make.
+ * The targets configuration should be an array
+ * of targets that should be passed to make.
  *
  * @category   Brood
  * @package    Brood_Action
