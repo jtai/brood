@@ -404,6 +404,20 @@ Optional Parameters
   * `changelog` - List of changed files being deployed
   * `ref` - ref being deployed
 
+Build\Make
+----------
+
+The `Build\Make` action runs make with specified targets.
+
+Required Parameters
+
+  * `directory` - Path to directory with Makefile
+
+Optional Parameters
+
+  * `sudo` - Run `make` as this user
+  * `target` - An array of targets to pass to `make`
+
 Distribute\Git
 --------------
 
