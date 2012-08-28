@@ -30,10 +30,10 @@ class Make extends AbstractAction
     {
         $this->chdir($this->getRequiredParameter('directory'));
 
-        $targets = $this->getParameter('targets');
+        $targets = $this->getParameter('target');
 
         // Run make with configured targets
-        $command = 'make' . empty($targets) ? '' : ' ' . $targets;
+        $command = 'make' . empty($targets) ? '' : implode(' ', $targets);
         unset($output);
 
         $this->log(Logger::INFO, __CLASS__, 'Performing ' . $command);
