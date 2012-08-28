@@ -33,7 +33,7 @@ class Make extends AbstractAction
         $targets = $this->getParameter('target');
 
         // Run make with configured targets
-        $command = 'make' . empty($targets) ? '' : implode(' ', $targets);
+        $command = 'make' . (empty($targets) ? '' : ' ' . implode(' ', $targets));
         unset($output);
 
         $this->log(Logger::INFO, __CLASS__, 'Performing ' . $command);
