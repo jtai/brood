@@ -404,6 +404,20 @@ Optional Parameters
   * `changelog` - List of changed files being deployed
   * `ref` - ref being deployed
 
+Build\Composer
+--------------
+
+The `Build\Composer` action runs 'php composer.phar install' with optional php-args.
+
+Required Parameters
+
+  * `directory` - Path to directory with composer.phar
+
+Optional Parameters
+
+  * `sudo` - Run `php` as this user
+  * `php-args` - Any command line options for PHP (http://php.net/manual/en/features.commandline.options.php)
+
 Build\Make
 ----------
 
