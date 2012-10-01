@@ -1,0 +1,42 @@
+<?php
+/**
+ * Brood
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
+
+namespace Brood\Action\Build;
+
+use Brood\Action\AbstractAction,
+    Brood\Log\Logger;
+
+/**
+ * Run composer.
+ *
+ * It simply runs 'php composer.phar install'
+ *
+ * @category   Brood
+ * @package    Brood_Action
+ * @copyright  Copyright (c) 2011 IGN Entertainment, Inc. (http://corp.ign.com/)
+ * @license    http://www.opensource.org/licenses/mit-license.php     MIT License
+ */
+class Composer extends AbstractAction
+{
+    public function execute()
+    {
+        $this->chdir($this->getRequiredParameter('directory'));
+
+        $phpArgs = $this->getParameter('php-args');
+
+        // Run php composer.phar install
+        $command = 'php ' . $phpArgs . ' composer.phar install';
+        unset($output);
+
+        $this->log(Logger::INFO, __CLASS__, 'Performing ' . $command);
+
+        $this->sudo($command, $output, $return_var, (string) $this->getParameter('sudo'));
+    }
+}
